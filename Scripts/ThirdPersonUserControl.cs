@@ -1,0 +1,203 @@
+using System;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityStandardAssets.Characters.ThirdPerson;
+
+namespace UnityStandardAssets.Characters.ThirdPerson
+{
+    [RequireComponent(typeof (ThirdPersonCharacter))]
+    public class ThirdPersonUserControl : MonoBehaviour
+    {
+        private ThirdPersonCharacter m_Character; // A reference to the ThirdPersonCharacter on the object                  // A reference to the main camera in the scenes transform
+        private Vector3 m_CamForward;             // The current forward direction of the camera
+        private Vector3 m_Move;
+        private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
+        Animator m_Animator;
+        public Transform attaction_generate_position;
+        public GameObject attack_object;
+        public GameObject ParticalHPUp;
+        public Safe_area_sever Sa;
+        public float Skill_1_CoolDownTime_Max = 10.0f;
+        public float Skill_1_Duration = 5.0f;
+        public float[] Skill_1_Value = { 1.1f, 1.2f, 2.0f, 0.1f, 0.2f, 0.0f}; //Base Value1, Base Vlaue2, ..., Update Value1, Update Value2, ...
+        public GameObject Skill_1_Icon;
+        public float Skill_2_CoolDownTime_Max = 10.0f;
+        public float Skill_2_Duration = 5.0f;
+        public float[] Skill_2_Value = { 30, 5, 10 ,1 };
+        public GameObject Skill_2_Icon;
+        public float Skill_3_CoolDownTime_Max = 10.0f;
+        public float Skill_3_Duration = 5.0f;
+        public float[] Skill_3_Value = { 10, 2 };
+        public GameObject Skill_3_Icon;
+        public float Skill_4_CoolDownTime_Max = 10.0f;
+        public float Skill_4_Duration = 5.0f;
+        public float[] Skill_4_Value = { 30, 10, 1, 10, 5, 0.25f };
+        public GameObject Skill_4_Icon;
+
+        private attribute _attri;
+        private float CoolDownTime = -1.0f;
+        private float Skill_1_CoolDownTime = -1.0f;
+        private bool Skill_1_active;
+        private float Skill_2_CoolDownTime = -1.0f;
+        private bool Skill_2_active;
+        private float Skill_3_CoolDownTime = -1.0f;
+        private bool Skill_3_active;
+        private float Skill_4_CoolDownTime = -1.0f;
+        private bool Skill_4_active;
+        public float Safe_area_damage_persecond_record;
+
+
+        private void Start()
+        {
+            m_Animator = GetComponent<Animator>();
+            _attri = GetComponent<attribute>();
+
+            // get the third person character ( this should never be null due to require component )
+            m_Character = GetComponent<ThirdPersonCharacter>();
+        }
+
+
+        private void Update()
+        {
+        }
+
+
+        void OnParticleCollision(GameObject colli)
+        {
+            if(colli.name == "Boss Partical")
+            // Boss ATK: 20, And 50% of Player's DEF is ignored.
+                this.gameObject.GetComponent<attribute>().update_HP(Mathf.Min(-20.0f+0.5f*this.gameObject.GetComponent<attribute>().DEF,0));
+
+        }
+
+        // Fixed update is called in sync with physics
+        private void FixedUpdate()
+        {
+            attribute _attr = this.gameObject.GetComponent<attribute>();
+            if (CoolDownTime > 0)
+                CoolDownTime -= Time.fixedDeltaTime;
+            if (Skill_1_CoolDownTime > 0)
+            {
+                Skill_1_CoolDownTime -= Time.fixedDeltaTime;
+                Skill_1_Icon.GetComponent<Image>().fillAmount = Mathf.Max(0, Skill_1_CoolDownTime) / Skill_1_CoolDownTime_Max;
+                if(Skill_1_CoolDownTime_Max - Skill_1_CoolDownTime >= Skill_1_Duration && Skill_1_active)
+                {
+                    Skill_1_active = false;
+                    Renderer[] list;
+                    list = this.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+                    for (int i = 0; i < list.Length; i++)
+                    {
+                        list[i].materials[0].color = Color.white;
+                    }
+                    _attr.ATK /= Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0];
+                    _attr.DEF /= Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0];
+                    this.gameObject.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier /= Skill_1_Value[2] + Skill_1_Value[5] * _attr.Skill_Level[0];
+                }
+            }
+            if (Skill_2_CoolDownTime > 0)
+            {
+                Skill_2_CoolDownTime -= Time.fixedDeltaTime;
+                Skill_2_Icon.GetComponent<Image>().fillAmount = Mathf.Max(0, Skill_2_CoolDownTime) / Skill_2_CoolDownTime_Max;
+                if (Skill_2_active)
+                    this.gameObject.GetComponent<attribute>().update_HP((Skill_2_Value[1] + Skill_2_Value[3] * this.gameObject.GetComponent<attribute>().Skill_Level[1]) * Time.fixedDeltaTime);
+                if (Skill_2_CoolDownTime_Max - Skill_2_CoolDownTime >= Skill_2_Duration && Skill_2_active)
+                {
+                    Skill_2_active = false;
+                }
+            }
+            if (Skill_3_CoolDownTime > 0)
+            {
+                Skill_3_CoolDownTime -= Time.fixedDeltaTime;
+                Skill_3_Icon.GetComponent<Image>().fillAmount = Mathf.Max(0, Skill_3_CoolDownTime) / Skill_3_CoolDownTime_Max;
+                
+                if (Skill_3_CoolDownTime_Max - Skill_3_CoolDownTime >= Skill_3_Value[0] + Skill_3_Value[1]*_attr.Skill_Level[2] && Skill_3_active)
+                {
+                    Skill_3_active = false;
+                    this.gameObject.transform.Find("Skill_3_shelter").gameObject.SetActive(false);
+                    Sa.DamagePerSecond = Safe_area_damage_persecond_record;
+                }
+            }
+            if (Skill_4_CoolDownTime > 0)
+            {
+                Skill_4_CoolDownTime -= Time.fixedDeltaTime;
+                Skill_4_Icon.GetComponent<Image>().fillAmount = Mathf.Max(0, Skill_4_CoolDownTime) / Skill_4_CoolDownTime_Max;
+
+            }
+
+            if (!(this.gameObject.GetComponent<attribute>().ifAlive))
+                return;
+            // read inputs
+            float h = Input.GetAxis("Horizontal");
+            float v = Input.GetAxis("Vertical");
+            bool crouch = false;// Input.GetKey(KeyCode.C);
+
+            
+            if (v < 0) v = 0;
+            m_Move = 3f * v * this.transform.forward + 1f * h * this.transform.right;
+
+            int state_now = m_Animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
+            if (state_now == Animator.StringToHash("Grounded") && Input.GetKeyDown(KeyCode.LeftAlt) && CoolDownTime <= 0) //If use mouse, change to Input.GetButtonDown("Fire1")
+            {
+                CoolDownTime = _attri.FireRate;
+                m_Animator.SetFloat("Random", UnityEngine.Random.Range(0f, 1f));
+                m_Animator.SetTrigger("attack");
+                GameObject temp = Instantiate(attack_object, attaction_generate_position.position, attaction_generate_position.rotation);
+                temp.GetComponent<ballistic>().speed = _attri.BallisticSpeed;
+                temp.GetComponent<ballistic>().side = _attri.team;
+                temp.GetComponent<ballistic>().damage = _attri.ATK + UnityEngine.Random.Range(-3, 3);
+                temp.GetComponent<ballistic>().From = this.gameObject;
+                temp.GetComponent<Rigidbody>().velocity = (attaction_generate_position.forward).normalized * _attri.BallisticSpeed;
+                temp.tag = "Team0";
+            }
+            if (state_now == Animator.StringToHash("Grounded") && Input.GetKeyDown(KeyCode.U) && Skill_1_CoolDownTime <= 0 && _attr.Skill_Level[0] > 0)
+            {
+                Skill_1_active = true;
+                Skill_1_CoolDownTime = Skill_1_CoolDownTime_Max;
+                Renderer[] list;
+                list = this.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+                
+                for(int i=0;i<list.Length;i++)
+                {
+                    list[i].materials[0].color = Color.red;
+                }
+                
+                _attr.ATK *= Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0];
+                _attr.DEF *= Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0]; 
+                this.gameObject.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier *= Skill_1_Value[2] + Skill_1_Value[5] * _attr.Skill_Level[0];
+            }
+            if (state_now == Animator.StringToHash("Grounded") && Input.GetKeyDown(KeyCode.I) && Skill_2_CoolDownTime <= 0 && _attr.Skill_Level[1] > 0)
+            {
+                Skill_2_active = true;
+                Skill_2_CoolDownTime = Skill_2_CoolDownTime_Max;
+                ParticalHPUp.SetActive(true);
+                _attr.update_HP(Skill_2_Value[0] + Skill_1_Value[2] * _attr.Skill_Level[1]);
+            }
+            if (state_now == Animator.StringToHash("Grounded") && Input.GetKeyDown(KeyCode.O) && Skill_3_CoolDownTime <= 0 && _attr.Skill_Level[2] > 0)
+            {
+                Skill_3_active = true;
+                Skill_3_CoolDownTime = Skill_3_CoolDownTime_Max;
+                this.gameObject.transform.Find("Skill_3_shelter").gameObject.SetActive(true);
+                Safe_area_damage_persecond_record = Sa.DamagePerSecond;
+                Sa.DamagePerSecond = 0;
+            }
+            if (state_now == Animator.StringToHash("Grounded") && Input.GetKeyDown(KeyCode.P) && Skill_4_CoolDownTime <= 0 && _attr.Skill_Level[3] > 0)
+            {
+                Skill_4_active = true;
+                Skill_4_CoolDownTime = Skill_4_CoolDownTime_Max;
+                ParticleSystem.MainModule _m = this.gameObject.transform.Find("Skill_4 Partical").gameObject.GetComponent<ParticleSystem>().main;
+                ParticleSystem.EmissionModule _e = this.gameObject.transform.Find("Skill_4 Partical").gameObject.GetComponent<ParticleSystem>().emission;
+                _m.duration = 0.5f * (Skill_4_Value[2] + Skill_4_Value[5] * _attr.Skill_Level[3]);
+                _e.rateOverTime = (Skill_4_Value[1] + Skill_4_Value[4] * _attr.Skill_Level[3]);
+                this.gameObject.transform.Find("Skill_4 Partical").gameObject.SetActive(true);
+
+            }
+
+
+
+
+            // pass all parameters to the character control script
+            m_Character.Move(m_Move, crouch, m_Jump);
+            m_Jump = false;
+        }
+    }
+}
