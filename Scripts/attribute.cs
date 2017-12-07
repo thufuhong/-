@@ -53,6 +53,11 @@ public class attribute : MonoBehaviour {
     {
         if (ifAlive)
         {
+			if (HP <= 0)
+			{
+				ifAlive = false;
+				return HP;
+			}
             HP += value;
             if(if_Player)
                 ui_HP.value = Mathf.Max(HP, 0) / HP_max;
@@ -141,4 +146,85 @@ public class attribute : MonoBehaviour {
         }
 		
 	}
+
+	public void SavePlayerAttribute()
+	{
+		PlayerPrefs.SetFloat ("HP_max", HP_max);
+		PlayerPrefs.SetFloat ("BallisticSpeed", BallisticSpeed);
+		PlayerPrefs.SetFloat ("BallisticDamage", BallisticDamage);
+		PlayerPrefs.SetFloat ("FireRate", FireRate);
+		PlayerPrefs.SetFloat ("MP_max", MP_max);
+		PlayerPrefs.SetFloat ("EXP", EXP);
+		PlayerPrefs.SetFloat ("Level", Level);
+		PlayerPrefs.SetFloat ("ATKGrowth", ATKGrowth);
+		PlayerPrefs.SetFloat ("DEFGrowth", DEFGrowth);
+		PlayerPrefs.SetFloat ("HPGrowth", HPGrowth);
+		PlayerPrefs.SetFloat ("MPGrowth", MPGrowth);
+		PlayerPrefs.SetFloat ("EXPForLevelUp", EXPForLevelUp);
+		PlayerPrefs.SetFloat ("gold", gold);
+		PlayerPrefs.SetFloat ("DropGold", DropGold);
+		PlayerPrefs.SetFloat ("team", team);
+		//PlayerPrefs.SetFloat ("ifAlive", ifAlive);
+		//PlayerPrefs.SetFloat ("if_Player", if_Player);
+		PlayerPrefs.SetFloat ("HP", HP);
+		PlayerPrefs.SetFloat ("MP", MP);
+		PlayerPrefs.SetFloat ("ATK", ATK);
+		PlayerPrefs.SetFloat ("DEF", DEF);
+		PlayerPrefs.SetFloat ("ForceBackPower", ForceBackPower);
+		PlayerPrefs.SetFloat ("ForceBackCounterMax", ForceBackCounterMax);
+		PlayerPrefs.SetFloat ("ForceBackCounter", ForceBackCounter);
+
+		PlayerPrefs.SetInt ("skillUp_Num", skillUp_Num);
+		PlayerPrefs.SetFloat ("Skill_Level0", Skill_Level[0]);
+		PlayerPrefs.SetFloat ("Skill_Level1", Skill_Level[1]);
+		PlayerPrefs.SetFloat ("Skill_Level2", Skill_Level[2]);
+		PlayerPrefs.SetFloat ("Skill_Level3", Skill_Level[3]);
+
+
+
+	}
+
+	public void ReadPlayerAttribute()
+	{
+		HP_max = PlayerPrefs.GetFloat ("HP_max", 100);
+		BallisticSpeed = PlayerPrefs.GetFloat ("BallisticSpeed", 10);
+		BallisticDamage = PlayerPrefs.GetFloat ("BallisticDamage", -34);
+		FireRate = PlayerPrefs.GetFloat ("FireRate", 1);
+		MP_max = PlayerPrefs.GetFloat ("MP_max", 100);
+		EXP = PlayerPrefs.GetFloat ("EXP", 0);
+		Level = PlayerPrefs.GetFloat ("Level", 1);
+		ATKGrowth = PlayerPrefs.GetFloat ("ATKGrowth", 5);
+		DEFGrowth = PlayerPrefs.GetFloat ("DEFGrowth", 5);
+		HPGrowth = PlayerPrefs.GetFloat ("HPGrowth", 20);
+		MPGrowth = PlayerPrefs.GetFloat ("MPGrowth", 10);
+		EXPForLevelUp = PlayerPrefs.GetFloat ("EXPForLevelUp", 1000);
+		gold = PlayerPrefs.GetFloat ("gold", 0);
+		DropGold = PlayerPrefs.GetFloat ("DropGold", 100);
+		team = PlayerPrefs.GetFloat ("team", 600);
+
+		ifAlive = true;
+		if_Player = true;
+		ForceBackDerection = new Vector3 (0, 0, 0);
+		//ifAlive = PlayerPrefs.GetFloat ("ifAlive", 100);
+		//if_Player = PlayerPrefs.GetFloat ("if_Player", 100);
+
+		HP = PlayerPrefs.GetFloat ("HP", 100);
+		MP = PlayerPrefs.GetFloat ("MP", 100);
+		ATK = PlayerPrefs.GetFloat ("ATK", 90);
+		DEF = PlayerPrefs.GetFloat ("DEF", 10);
+		ForceBackPower = PlayerPrefs.GetFloat ("ForceBackPower", 1);
+		ForceBackCounterMax = PlayerPrefs.GetFloat ("ForceBackCounterMax", 10);
+		ForceBackCounter = PlayerPrefs.GetFloat ("ForceBackCounter", -1);
+
+		skillUp_Num = PlayerPrefs.GetInt ("skillUp_Num", 0);
+		Skill_Level[0] = PlayerPrefs.GetFloat ("Skill_Level0", 0);
+		Skill_Level[1] = PlayerPrefs.GetFloat ("Skill_Level1", 0);
+		Skill_Level[2] = PlayerPrefs.GetFloat ("Skill_Level2", 0);
+		Skill_Level[3] = PlayerPrefs.GetFloat ("Skill_Level3", 0);
+
+		ui_level.text = ((int)Level).ToString();
+		ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
+		ui_HP.value = Mathf.Max(HP, 0) / HP_max;
+	}
+
 }
