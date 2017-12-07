@@ -54,7 +54,7 @@ public class GameObjectGenerate : MonoBehaviour
 	private float rock_area_fraction_low = 1 / 6f;
 	private float rock_area_fraction_high = 5 / 6f;
 
-	struct GameObjectNode
+	public struct GameObjectNode
 	{
 		public float x;
 		public float y;
@@ -87,7 +87,7 @@ public class GameObjectGenerate : MonoBehaviour
 
 	LinkedList<GameObjectNode> GameObjectList = new LinkedList<GameObjectNode>();
 
-	bool IsCoincide(GameObjectNode temp)
+	public bool IsCoincide(GameObjectNode temp)
 	{
 		LinkedListNode<GameObjectNode> current = GameObjectList.First;
 		while (current != null)
