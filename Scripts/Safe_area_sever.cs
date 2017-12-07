@@ -15,6 +15,10 @@ public class Safe_area_sever : MonoBehaviour
     public GameObject shop;
     public Text ui_text;
     public GameObject Boss_Slider;
+
+	public GameObjectGenerate gameobject_generate;
+	public attribute player_attribute;
+
     public float map_scale_x = 500;
     public float map_scale_z = 500;
     public float wait_time = 5f;
@@ -36,9 +40,16 @@ public class Safe_area_sever : MonoBehaviour
     private float DeltaQuad4;
     private float boss_transition_timer = -1.0f;
     private bool WinFlag = false;
+
+	private float boss_length = 2.2f;
+	private float boss_width = 2.2f;
+
     // Use this for initialization
     void Start () 
 	{
+		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "LevelSecond")
+			player_attribute.ReadPlayerAttribute ();
+
         quad1.transform.position = new Vector3(0f, 0.02f, map_scale_z / 2);
         quad2.transform.position = new Vector3(map_scale_x / 2, 0.02f, 0f);
         quad3.transform.position = new Vector3(map_scale_x - 0f, 0.02f, map_scale_z / 2);
@@ -82,7 +93,17 @@ public class Safe_area_sever : MonoBehaviour
             }  
             if ( boss_transition_timer <3)
             {
-                Boss.transform.position = SafeCenter + new Vector3(0f, 3.9f, 0f);
+                //Boss.transform.position = SafeCenter + new Vector3(0f, 3.9f, 0f);
+
+				Vector3 t = new Vector3(SafeCenter.x,3.9f,SafeCenter.z);
+				while (gameobject_generate.IsCoincide (new GameObjectGenerate.GameObjectNode (t.x, t.y, t.z, boss_length, boss_width, 0)))
+				{
+					t = t + new Vector3 (UnityEngine.Random.Range (-2f * boss_length, 2f * boss_length), 0, UnityEngine.Random.Range (-2f * boss_width, 2f * boss_width));
+				}
+				Boss.transform.position = t;
+
+
+
                 Boss.GetComponent<MeshRenderer>().materials[0].color =
                     Color.Lerp(Boss.GetComponent<MeshRenderer>().material.color, new Color(Boss.GetComponent<MeshRenderer>().material.color.r, Boss.GetComponent<MeshRenderer>().material.color.g, Boss.GetComponent<MeshRenderer>().material.color.b, 1f), Time.fixedDeltaTime);
             }
@@ -113,6 +134,10 @@ public class Safe_area_sever : MonoBehaviour
             shop.transform.position = Boss.transform.position;
             shop.SetActive(true);
             //event when success
+
+			player_attribute.SavePlayerAttribute();
+			//UnityEngine.SceneManagement.SceneManager.LoadScene("LevelSecond");
+
             return;
         }
 

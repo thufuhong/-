@@ -26,7 +26,7 @@ public class shop : MonoBehaviour {
         if (!isPlayerNearBy && (this.gameObject.transform.position - player.transform.position).sqrMagnitude < 500)
         {
             isPlayerNearBy = true;
-            mainHelper.text = "按 E 来显示商店。";
+            mainHelper.text = "按 E 来显示商店。\n按N来进入下一关卡。";
             mainHelper.gameObject.transform.parent.gameObject.SetActive(true);
         }
         if (isPlayerNearBy)
@@ -36,6 +36,8 @@ public class shop : MonoBehaviour {
                 ShopObject.SetActive(true);
                 //Put SHOP code here
             }
+			if(!shopOpened && Input.GetKeyDown(KeyCode.N))
+				UnityEngine.SceneManagement.SceneManager.LoadScene("LevelSecond");
             if (shopOpened && (Input.GetKeyDown(KeyCode.E)|| Input.GetKeyDown(KeyCode.Escape)))
             {
                 ShopObject.SetActive(false);
