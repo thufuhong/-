@@ -20,8 +20,13 @@ public class Script_EscMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
 			if (EscMenu.active == true) {
-				Button_Backgame ();
-			} else {
+                Button_Backgame();
+            }
+            if (SettingMenu.active == true)
+            {
+                Time.timeScale = 1;
+                SettingMenu.SetActive(false);
+            }  else {
 				Time.timeScale = 0;          //暂停
 				EscMenu.SetActive(true);     //显示菜单
 			}
