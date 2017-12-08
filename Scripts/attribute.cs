@@ -26,15 +26,15 @@ public class attribute : MonoBehaviour {
     public float DropGold = 100f;
     public float DropEXP = 600f;
     public float[] Skill_Level = { 0, 0, 0, 0 };
-
+    public string NiCheng;
+    public string ZhiYe;
 
     public float team = 0;
     public bool ifAlive = true;
     public Slider ui_HP;
     public Slider ui_EXP;
-    public Text ui_level;
     public bool if_Player = false;
-    public GameObject respawn_button;
+    public GameObject DieWindow;
     public GameObject ParticalLevelUp;
 
     public float HP;
@@ -76,7 +76,7 @@ public class attribute : MonoBehaviour {
                 if(this.gameObject.tag == "Team1")
                     Destroy(this.gameObject, 1.0f);
                 if (this.gameObject.tag == "Team0")
-                    respawn_button.SetActive(true);
+                    DieWindow.SetActive(true);
                 // other event when death....
             }
             //Debug.Log(this.name + "recieve" + value.ToString() + ", remain" + HP.ToString());
@@ -96,7 +96,6 @@ public class attribute : MonoBehaviour {
             EXP -= EXPForLevelUp;
             Level++;
             skillUp_Num++;
-            ui_level.text = ((int)Level).ToString();
             ATK += ATKGrowth;
             DEF += DEFGrowth;
             HP_max += HPGrowth;
@@ -132,8 +131,6 @@ public class attribute : MonoBehaviour {
         HP = HP_max;
         MP = MP_max;
         BallisticDamage = ATK;
-        if(if_Player)
-            ui_level.text = ((int)Level).ToString();
 	}
 	
 	// Update is called once per frame
@@ -222,7 +219,7 @@ public class attribute : MonoBehaviour {
 		Skill_Level[2] = PlayerPrefs.GetFloat ("Skill_Level2", 0);
 		Skill_Level[3] = PlayerPrefs.GetFloat ("Skill_Level3", 0);
 
-		ui_level.text = ((int)Level).ToString();
+
 		ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
 		ui_HP.value = Mathf.Max(HP, 0) / HP_max;
 	}
