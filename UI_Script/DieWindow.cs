@@ -11,7 +11,7 @@ public class DieWindow : MonoBehaviour {
     public Text MainText;
 	// Use this for initialization
 	void Start () {
-        MainText.text =Fuwang.GetComponent<attribute>().NiCheng + "，您已死亡...";
+        MainText.text = Fuwang.GetComponent<attribute>().NiCheng + "，您已死亡...";
 	}
 	
 	// Update is called once per frame
@@ -20,10 +20,11 @@ public class DieWindow : MonoBehaviour {
 	}
     public void Button_Renew()
     {
-       
-//         Time.timeScale = 1;
-        SceneManager.LoadScene("LevelFirst", LoadSceneMode.Single);
-//         Time.timeSinceLevelLoad("LevelFirst");
+		// Time.timeScale = 1;
+        // SceneManager.LoadScene("LevelFirst", LoadSceneMode.Single);
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+		// // Time.timeSinceLevelLoad("LevelFirst");
+		// Time.timeSinceLevelLoad(SceneManager.GetActiveScene().name);
     }
     public void Button_Back()
     {

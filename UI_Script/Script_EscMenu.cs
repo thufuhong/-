@@ -21,6 +21,7 @@ public class Script_EscMenu : MonoBehaviour
         {
 			if (EscMenu.active == true) {
                 Button_Backgame();
+				return;
             }
             if (SettingMenu.active == true)
             {
