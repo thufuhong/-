@@ -59,7 +59,7 @@
 - 改变Esc菜单贴图，统一整体UI风格
 - 添加Load动画
 
-##V0.16(2017.12.8)
+## V0.17(2017.12.8)
 
 - 删除Script/pickup.cs，增加UI_Script/pickGoods.cs
 	* 统一所有捡起物品的操作
