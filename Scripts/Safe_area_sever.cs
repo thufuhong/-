@@ -59,6 +59,7 @@ public class Safe_area_sever : MonoBehaviour
         quad2.transform.localScale = new Vector3(0f, map_scale_x, 1f);
         quad3.transform.localScale = new Vector3(0f, map_scale_z, 1f);
         quad4.transform.localScale = new Vector3(0f, map_scale_x, 1f);
+
     }
 	void Update() { }
 

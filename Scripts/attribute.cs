@@ -109,6 +109,24 @@ public class attribute : MonoBehaviour {
 
     }
 
+	// interface about goods droped when be killed
+	public void dropGoods(string type) {
+		if (type == "coin") {
+			GameObject coin = Instantiate (transform.Find ("/Terrain").GetComponent<GameObjectGenerate> ().itemCoin,
+				transform.position + new Vector3(0, (float) (GetComponent<CapsuleCollider>().bounds.size.y * 0.5), 0),
+				Quaternion.Euler (-90, 0, 0)
+			);
+			coin.GetComponent<pickGoods> ().value = DropGold;
+			// Debug.Log ("coin" + coin.GetComponent<pickGoods> ().value + " cur:" + DropGold);
+		}
+	}
+
+	public void update_gold(float value) {
+		if (ifAlive) {
+			gold += value;
+		}
+	}
+
     public void Update_Skill(int SkillNum)
     {
         Skill_Level[SkillNum] += 1;

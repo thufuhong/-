@@ -10,6 +10,7 @@ public class GameObjectGenerate : MonoBehaviour
 	public GameObject enemy;
 	public GameObject enemy_attack_area;
 	public GameObject itemHP;
+	public GameObject itemCoin;
 
 	public GameObject RockHill_1;
 	public GameObject RockHill_2;
@@ -159,6 +160,9 @@ public class GameObjectGenerate : MonoBehaviour
 
 			ListPrint ();
 		}
+
+		//
+		transform.Find ("/Canvas").gameObject.GetComponent<EnterWindow> ().InitFunction ();
 	}
 	
 	// Update is called once per frame
@@ -207,7 +211,7 @@ public class GameObjectGenerate : MonoBehaviour
 				}
 			}
 			GameObject temp_HP = Instantiate (itemHP, t, Quaternion.Euler(-90, 0, 0));
-			temp_HP.GetComponent<pickup> ().value = (int)UnityEngine.Random.Range (10, 50);
+			temp_HP.GetComponent<pickGoods> ().value = (int)UnityEngine.Random.Range (10, 50);
 		}
 	}
 
