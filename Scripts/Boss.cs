@@ -16,7 +16,9 @@ public class Boss : MonoBehaviour {
             if (_c <= 0)
             {
                 player.GetComponent<attribute>().update_EXP(this.gameObject.GetComponent<attribute>().DropEXP);
-                player.GetComponent<attribute>().gold += this.gameObject.GetComponent<attribute>().DropGold;
+                // player.GetComponent<attribute>().gold += this.gameObject.GetComponent<attribute>().DropGold;
+				// can't get gold directly, produce a gold coin
+				this.gameObject.GetComponent<attribute>().dropGoods("coin");
             }
         }
     }
