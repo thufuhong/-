@@ -7,12 +7,23 @@ public class MainMenu_Sever : MonoBehaviour {
     public Vector3 DeltaCenter = new Vector3(25, 0, 0);
     public Vector3 DiffCenter = new Vector3(-2, 0, 0);
     public int counter = 0;
+    public GameObject choosePlayer;
+
     private Vector3 BackgtoundTarget;
     private Vector3 CameraTarget;
     // Use this for initialization
     void Start () {
         BackgtoundTarget = BackGroundTransform.position;
         CameraTarget = Camera.main.transform.position;
+        
+
+    }
+    public void ChooseCharacter(int x)
+    {
+        PlayerPrefs.SetInt("Character", x);
+        BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
+        CameraTarget = CameraTarget + DeltaCenter;
+        Invoke("LoadFirstScene", 2);
 
     }
     void LoadFirstScene()
@@ -45,10 +56,10 @@ public class MainMenu_Sever : MonoBehaviour {
                         Application.Quit();
                         break;
                     case "M2_NewGame":
-                        BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
-                        CameraTarget = CameraTarget + DeltaCenter;
-                        Invoke("LoadFirstScene", 2);
-                        
+                        //BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
+                        //CameraTarget = CameraTarget + DeltaCenter;
+                        //Invoke("LoadFirstScene", 2);
+                        choosePlayer.SetActive(true);
                         break;
                     default:
                         BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;

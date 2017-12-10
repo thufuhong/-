@@ -122,8 +122,10 @@ public class GameObjectGenerate : MonoBehaviour
 		for (int j = 0; j < 3; j++)
 		{
 			GenetateEnemy (60);
-			GenetateHP (30);
-			GenerateTree (2);
+			GenetateHP (10);
+            GenetateCoins(15);
+
+            GenerateTree (2);
 			GenerateRockHill (3);
 			GenerateMoutain (3);
 		}
@@ -215,9 +217,28 @@ public class GameObjectGenerate : MonoBehaviour
 		}
 	}
 
+    void GenetateCoins(int count)
+    {
+        Vector3 t;
+        for (int i = 0; i < count; i++)
+        {
+            while (true)
+            {
+                t = new Vector3(UnityEngine.Random.Range(edge_width, map_x - edge_width),
+                    1f, UnityEngine.Random.Range(edge_width, map_x - edge_width));
+                if (!IsCoincide(new GameObjectNode(t.x, t.y, t.z, HP_length, HP_width, 0)))
+                {
+                    GameObjectList.AddLast(new GameObjectNode(t.x, t.y, t.z, HP_length, HP_width, 0));
+                    break;
+                }
+            }
+            GameObject temp_HP = Instantiate(itemCoin, t, Quaternion.Euler(-90, 0, 0));
+            temp_HP.GetComponent<pickGoods>().value = (int)UnityEngine.Random.Range(10, 50);
+        }
+    }
 
-	//it will generate 2*3*count trees
-	void GenerateTree(int count)
+    //it will generate 2*3*count trees
+    void GenerateTree(int count)
 	{
 		GameObject[] tree = new GameObject[3];
 		GameObject[] temp_tree = new GameObject[3];

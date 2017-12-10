@@ -8,6 +8,7 @@ public class button : MonoBehaviour {
 	void Start () {
 		
 	}
+
     public void OnClick_Respown()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
