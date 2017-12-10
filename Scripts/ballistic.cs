@@ -39,7 +39,9 @@ public class ballistic : MonoBehaviour {
             if (t.GetComponent<attribute>().update_HP(Mathf.Min( t.GetComponent<attribute>().DEF - damage,0)) <= 0)
             {
                 From.GetComponent<attribute>().update_EXP(t.GetComponent<attribute>().DropEXP);
-                From.GetComponent<attribute>().gold += t.GetComponent<attribute>().DropGold;
+                // From.GetComponent<attribute>().gold += t.GetComponent<attribute>().DropGold;
+				// can't get gold directly, produce a gold coin
+				t.GetComponent<attribute> ().dropGoods("coin");
             }
         }
     }

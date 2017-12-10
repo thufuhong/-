@@ -58,3 +58,12 @@
 - 添加个人属性UI，人物死亡提示UI，商店UI框架
 - 改变Esc菜单贴图，统一整体UI风格
 - 添加Load动画
+
+## V0.17(2017.12.8)
+
+- 删除Script/pickup.cs，增加UI_Script/pickGoods.cs
+	* 统一所有捡起物品的操作
+- 在attribute中添加了两个函数：dropGoods 和 update_gold
+	 * void dropGoods(string)：掉落物品，物品性质由输入string决定
+	 * void update_gold(float)：更新金钱信息，增加金钱数由输入float决定
+- 各关卡刚进入游戏时，显示弹窗，表示软件及当前关卡信息
