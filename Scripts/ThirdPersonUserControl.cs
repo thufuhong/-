@@ -33,6 +33,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         public float Skill_4_Duration = 5.0f;
         public float[] Skill_4_Value = { 30, 10, 1, 10, 5, 0.25f };
         public GameObject Skill_4_Icon;
+        public float ATKTime_max = 20.0f;
+        public float DEFTime_max = 20.0f;
+        public bagManager Bag;
+        public GameObject MainScreenItem;
+        public GameObject ShopObject;
 
         private attribute _attri;
         private float CoolDownTime = -1.0f;
@@ -44,7 +49,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private bool Skill_3_active;
         private float Skill_4_CoolDownTime = -1.0f;
         private bool Skill_4_active;
-        public float Safe_area_damage_persecond_record;
+        private float Safe_area_damage_persecond_record;
+        private float ATKTime = -1f;
+        private float ATK_multiplier;
+        private float DEFTime = -1f;
+        private float DEF_multiplier;
+        private float item_cooldown = -1.0f; //内置按键冷却时间0.5s，防止重复判定
 
 
         private void Start()
@@ -123,13 +133,28 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 Skill_4_Icon.GetComponent<Image>().fillAmount = Mathf.Max(0, Skill_4_CoolDownTime) / Skill_4_CoolDownTime_Max;
 
             }
+            if (ATKTime > 0)
+            {
+                ATKTime -= Time.fixedDeltaTime;
+                if (ATKTime <= 0)
+                    _attr.ATK /= ATK_multiplier;
+            }
+            if (DEFTime > 0)
+            {
+                DEFTime -= Time.fixedDeltaTime;
+                if (DEFTime <= 0)
+                    _attr.DEF /= DEF_multiplier;
+            }
+            if (item_cooldown > 0)
+                item_cooldown -= Time.fixedDeltaTime;
 
             if (!(this.gameObject.GetComponent<attribute>().ifAlive))
                 return;
+            
             // read inputs
             float h = Input.GetAxis("Horizontal");
             float v = Input.GetAxis("Vertical");
-            bool crouch = false;// Input.GetKey(KeyCode.C);
+
 
             
             if (v < 0) v = 0;
@@ -146,6 +171,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 temp.GetComponent<ballistic>().side = _attri.team;
                 temp.GetComponent<ballistic>().damage = _attri.ATK + UnityEngine.Random.Range(-3, 3);
                 temp.GetComponent<ballistic>().From = this.gameObject;
+                temp.GetComponent<ballistic>().duration = this.gameObject.GetComponent<attribute>().ZhiYe == "战士" ? 1.0f : 3.0f;
                 temp.GetComponent<Rigidbody>().velocity = (attaction_generate_position.forward).normalized * _attri.BallisticSpeed;
                 temp.tag = "Team0";
             }
@@ -189,14 +215,110 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 _m.duration = 0.5f * (Skill_4_Value[2] + Skill_4_Value[5] * _attr.Skill_Level[3]);
                 _e.rateOverTime = (Skill_4_Value[1] + Skill_4_Value[4] * _attr.Skill_Level[3]);
                 this.gameObject.transform.Find("Skill_4 Partical").gameObject.SetActive(true);
+            }
+            if (Input.GetKeyDown(KeyCode.E) && item_cooldown < 0)
+            {
+                item_cooldown = 0.5f;
+                if (ShopObject.activeInHierarchy)
+                    ShopObject.SetActive(false);
+                else
+                {
+                    ShopObject.SetActive(true);
+                    ShopObject.GetComponent<bagManager>().RefreshBag();
+                } 
+            }
+            if (Input.GetKeyDown(KeyCode.F) && item_cooldown<0)
+            {
+                if(MainScreenItem.transform.Find("Icon").gameObject.GetComponent<RawImage>().texture.Equals(Bag.nan) == false)
+                {
+                    float _percentage = 0.0f;
+                    item_cooldown = 0.5f;
+                    int _x = Bag._x;
+                    int _y = Bag._y;
+                    if (_x == 0)
+                    {
+                        _percentage = _y == 0 ? 0.2f : _y == 1 ? 0.4f : _y == 2 ? 0.6f : 1.0f;
+                        _attr.update_HP(_attr.HP_max * _percentage);
+                        _attr.gameObject.transform.Find("HPup").gameObject.SetActive(true);
+                        Bag.ItemOwned[4 * _x + _y]--;
+                        Bag.RefreshBag();
+                        MainScreenItem.transform.Find("Number").gameObject.GetComponent<Text>().text = Bag.ItemOwned[4 * _x + _y].ToString();
+                        if (Bag.ItemOwned[4 * _x + _y] == 0)
+                        {
+                            MainScreenItem.transform.Find("Icon").gameObject.GetComponent<RawImage>().texture = Bag.nan;
+                            Bag.ItemGameObject[4 * _x + _y].transform.Find("Choosen").gameObject.SetActive(false);
+                        }
+                    }
+                    if (_x == 1)
+                    {
+                        _percentage = _y == 0 ? 0.3f : _y == 1 ? 0.6f : _y == 2 ? 0.9f : 1.5f;
+                        if(ATKTime<0)
+                        {
+                            ATKTime = ATKTime_max;
+                            ATK_multiplier = 1 + _percentage;
+                            _attr.ATK *=  1 + _percentage;
+                        }
+                        else
+                        {
+                            if(1 + _percentage == ATK_multiplier)
+                                ATKTime = ATKTime_max;
+                            else
+                            {
+                                ATKTime = ATKTime_max;
+                                _attr.ATK /= ATK_multiplier;
+                                ATK_multiplier = 1 + _percentage;
+                                _attr.ATK *= 1 + _percentage;
+                            }
+                        }
 
+                        Bag.ItemOwned[4 * _x + _y]--;
+                        Bag.RefreshBag();
+                        MainScreenItem.transform.Find("Number").gameObject.GetComponent<Text>().text = Bag.ItemOwned[4 * _x + _y].ToString();
+                        if (Bag.ItemOwned[4 * _x + _y] == 0)
+                        {
+                            MainScreenItem.transform.Find("Icon").gameObject.GetComponent<RawImage>().texture = Bag.nan;
+                            Bag.ItemGameObject[4 * _x + _y].transform.Find("Choosen").gameObject.SetActive(false);
+                        }
+                    }
+                    if (_x == 2)
+                    {
+                        _percentage = _y == 0 ? 0.3f : _y == 1 ? 0.6f : _y == 2 ? 0.9f : 1.5f;
+                        if (DEFTime < 0)
+                        {
+                            DEFTime = DEFTime_max;
+                            DEF_multiplier = 1 + _percentage;
+                            _attr.DEF *= 1 + _percentage;
+                        }
+                        else
+                        {
+                            if (1 + _percentage == DEF_multiplier)
+                                DEFTime = DEFTime_max;
+                            else
+                            {
+                                DEFTime = DEFTime_max;
+                                _attr.DEF /= DEF_multiplier;
+                                DEF_multiplier = 1 + _percentage;
+                                _attr.DEF *= 1 + _percentage;
+                            }
+                        }
+
+                        Bag.ItemOwned[4 * _x + _y]--;
+                        Bag.RefreshBag();
+                        MainScreenItem.transform.Find("Number").gameObject.GetComponent<Text>().text = Bag.ItemOwned[4 * _x + _y].ToString();
+                        if (Bag.ItemOwned[4 * _x + _y] == 0)
+                        {
+                            MainScreenItem.transform.Find("Icon").gameObject.GetComponent<RawImage>().texture = Bag.nan;
+                            Bag.ItemGameObject[4 * _x + _y].transform.Find("Choosen").gameObject.SetActive(false);
+                        }
+                    }
+                }
             }
 
 
 
 
             // pass all parameters to the character control script
-            m_Character.Move(m_Move, crouch, m_Jump);
+            m_Character.Move(m_Move, false, m_Jump);
             m_Jump = false;
         }
     }

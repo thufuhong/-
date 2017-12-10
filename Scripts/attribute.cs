@@ -72,9 +72,14 @@ public class attribute : MonoBehaviour {
                     anim.ResetTrigger("stun");
                 }
                 catch { }
+                try
+                {
+                    this.gameObject.transform.Find("Died Particle").gameObject.SetActive(true);
+                }
+                catch { }
                 ifAlive = false;
                 if(this.gameObject.tag == "Team1")
-                    Destroy(this.gameObject, 1.0f);
+                    Destroy(this.gameObject, 1.5f);
                 if (this.gameObject.tag == "Team0")
                     DieWindow.SetActive(true);
                 // other event when death....
@@ -141,7 +146,7 @@ public class attribute : MonoBehaviour {
             Skill_4_Icon.GetComponent<Image>().fillAmount = 0;
         if (skillUp_Num <= 0)
             SkillUp_button.SetActive(false);
-
+        
     } 
     
     // Use this for initialization
@@ -149,7 +154,20 @@ public class attribute : MonoBehaviour {
         HP = HP_max;
         MP = MP_max;
         BallisticDamage = ATK;
-	}
+        if (Skill_Level[0] >= 1)
+            Skill_1_Icon.GetComponent<Image>().fillAmount = 0;
+        if (Skill_Level[1] >= 1)
+            Skill_2_Icon.GetComponent<Image>().fillAmount = 0;
+        if (Skill_Level[2] >= 1)
+            Skill_3_Icon.GetComponent<Image>().fillAmount = 0;
+        if (Skill_Level[3] >= 1)
+            Skill_4_Icon.GetComponent<Image>().fillAmount = 0;
+        if (Level == 1)
+            skillUp_Num++;
+        if (skillUp_Num > 0)
+            SkillUp_button.SetActive(true);
+
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
