@@ -16,6 +16,11 @@ public class Safe_area_sever : MonoBehaviour
     public Text ui_text;
     public GameObject Boss_Slider;
 
+    public Avatar axe;
+    public Avatar crystal;
+    public GameObject attack_axe;
+    public GameObject attack_crystal;
+
 	public GameObjectGenerate gameobject_generate;
 	public attribute player_attribute;
 
@@ -49,6 +54,70 @@ public class Safe_area_sever : MonoBehaviour
 	{
 		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "LevelSecond")
 			player_attribute.ReadPlayerAttribute ();
+
+        try
+        {
+            int _charac = PlayerPrefs.GetInt("Character");
+            if (_charac == 1)
+            {
+                player.transform.Find("axe_armor").gameObject.SetActive(false);
+                player.transform.Find("axe_base").gameObject.SetActive(false);
+                player.transform.Find("axe_belt").gameObject.SetActive(false);
+                player.transform.Find("axe_hair").gameObject.SetActive(false);
+                player.transform.Find("root").gameObject.SetActive(false);
+
+                player.transform.Find("crystal_maiden_arms").gameObject.SetActive(true);
+                player.transform.Find("crystal_maiden_back").gameObject.SetActive(true);
+                player.transform.Find("crystal_maiden_base").gameObject.SetActive(true);
+                player.transform.Find("crystal_maiden_head").gameObject.SetActive(true);
+                player.transform.Find("crystal_maiden_shoulder").gameObject.SetActive(true);
+                player.transform.Find("crystal_maiden_shoulder_bow").gameObject.SetActive(true);
+                player.transform.Find("Root_0").gameObject.SetActive(true);
+
+                player.GetComponent<Animator>().avatar = crystal;
+                player.transform.Find("Attack_area").gameObject.SetActive(false);
+                player.GetComponent<ThirdPersonUserControl>().attack_object = attack_crystal;
+                player.GetComponent<attribute>().ZhiYe = "法师";
+                player.GetComponent<attribute>().ATK = 50;
+                player.GetComponent<attribute>().DEF = 5;
+                player.GetComponent<attribute>().ATKGrowth = 3;
+                player.GetComponent<attribute>().DEFGrowth = 0.2f;
+                player.GetComponent<attribute>().HPGrowth = 10f;
+                player.GetComponent<attribute>().FireRate = 0.8f;
+                player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.2f;
+
+            }
+            if (_charac == 0)
+            {
+                player.transform.Find("axe_armor").gameObject.SetActive(true);
+                player.transform.Find("axe_base").gameObject.SetActive(true);
+                player.transform.Find("axe_belt").gameObject.SetActive(true);
+                player.transform.Find("axe_hair").gameObject.SetActive(true);
+                player.transform.Find("root").gameObject.SetActive(true);
+
+                player.transform.Find("crystal_maiden_arms").gameObject.SetActive(false);
+                player.transform.Find("crystal_maiden_back").gameObject.SetActive(false);
+                player.transform.Find("crystal_maiden_base").gameObject.SetActive(false);
+                player.transform.Find("crystal_maiden_head").gameObject.SetActive(false);
+                player.transform.Find("crystal_maiden_shoulder").gameObject.SetActive(false);
+                player.transform.Find("crystal_maiden_shoulder_bow").gameObject.SetActive(false);
+                player.transform.Find("Root_0").gameObject.SetActive(false);
+
+                player.GetComponent<Animator>().avatar = axe;
+                player.transform.Find("Attack_area").gameObject.SetActive(true);
+                player.GetComponent<ThirdPersonUserControl>().attack_object = attack_axe;
+                player.GetComponent<attribute>().ZhiYe = "战士";
+                player.GetComponent<attribute>().ATK = 30;
+                player.GetComponent<attribute>().DEF = 10;
+                player.GetComponent<attribute>().ATKGrowth = 1.5f;
+                player.GetComponent<attribute>().DEFGrowth = 1f;
+                player.GetComponent<attribute>().HPGrowth = 20f;
+                player.GetComponent<attribute>().FireRate = 0.6f;
+                player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.5f;
+
+            }
+        }
+        catch { }
 
         quad1.transform.position = new Vector3(0f, 0.02f, map_scale_z / 2);
         quad2.transform.position = new Vector3(map_scale_x / 2, 0.02f, 0f);

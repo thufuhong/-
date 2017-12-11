@@ -11,10 +11,11 @@ public class ballistic : MonoBehaviour {
     public float speed;
     public float damage;
     public float side = -1;
+    public float duration = 2.0f;
 
 	// Use this for initialization
 	void Start () { 
-        Destroy(this.gameObject, 2.0f);
+        Destroy(this.gameObject, duration);
 	}
 	
     void OnTriggerEnter(Collider colli)
@@ -28,15 +29,17 @@ public class ballistic : MonoBehaviour {
         GameObject t = colli.gameObject;
         if (t.tag == enemytag)
         {
+            if (t.GetComponent<attribute>().ifAlive == false)
+                return;
             Destroy(this.gameObject);
             // apply stun and forceback to target
-            if(t.tag != "Team0" && t.name != "Boss")
+            if(t.tag != "Team0" && t.name != "Boss" && From.GetComponent<attribute>().ZhiYe == "战士")
             {
                 t.GetComponent<attribute>().ForceBackDerection = transform.forward;
                 t.GetComponent<attribute>().ForceBackCounter = t.GetComponent<attribute>().ForceBackCounterMax;
                 t.GetComponent<Animator>().SetTrigger("stun");
             }
-            if (t.GetComponent<attribute>().update_HP(Mathf.Min( t.GetComponent<attribute>().DEF - damage,0)) <= 0)
+            if (t.GetComponent<attribute>().HP >=0 && t.GetComponent<attribute>().update_HP(Mathf.Min( t.GetComponent<attribute>().DEF - damage,0)) <= 0)
             {
                 From.GetComponent<attribute>().update_EXP(t.GetComponent<attribute>().DropEXP);
                 // From.GetComponent<attribute>().gold += t.GetComponent<attribute>().DropGold;
