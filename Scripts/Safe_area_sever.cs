@@ -53,7 +53,13 @@ public class Safe_area_sever : MonoBehaviour
     void Start () 
 	{
 		//read the attribute of player
-		player_attribute.ReadPlayerAttribute ();
+		//player_attribute.ReadPlayerAttribute ();
+
+
+
+		//player_attribute.SaveAttributeInFile ();
+
+		player_attribute.ReadAttributeFromFile ();
 
 
 
@@ -82,8 +88,8 @@ public class Safe_area_sever : MonoBehaviour
                 player.GetComponent<attribute>().ZhiYe = "法师";
 				if(player_attribute.level_num == 1)
 				{
-                	player.GetComponent<attribute>().ATK = 50;
-                	player.GetComponent<attribute>().DEF = 5;
+                	player.GetComponent<attribute>().ATK = 50 * 5;
+                	player.GetComponent<attribute>().DEF = 5 * 5;
                 	player.GetComponent<attribute>().ATKGrowth = 3f * 5f;
                 	player.GetComponent<attribute>().DEFGrowth = 0.2f * 5f;
                 	player.GetComponent<attribute>().HPGrowth = 10f;
@@ -115,8 +121,8 @@ public class Safe_area_sever : MonoBehaviour
                 player.GetComponent<attribute>().ZhiYe = "战士";
 				if(player_attribute.level_num == 1)
 				{
-					player.GetComponent<attribute>().ATK = 30;
-                	player.GetComponent<attribute>().DEF = 10;
+					player.GetComponent<attribute>().ATK = 30 * 5;
+                	player.GetComponent<attribute>().DEF = 10 * 5;
                 	player.GetComponent<attribute>().ATKGrowth = 1.5f * 5f;
                 	player.GetComponent<attribute>().DEFGrowth = 1f * 5f;
                 	player.GetComponent<attribute>().HPGrowth = 20f;
