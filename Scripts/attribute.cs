@@ -47,6 +47,9 @@ public class attribute : MonoBehaviour {
     public Vector3 ForceBackDerection;
 
     private int skillUp_Num = 0;
+
+
+	public int level_num = 1;
     
 
     public float update_HP(float value)
@@ -258,6 +261,15 @@ public class attribute : MonoBehaviour {
 
 		ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
 		ui_HP.value = Mathf.Max(HP, 0) / HP_max;
+	}
+
+	public void EnemyUpdate()
+	{
+		HP = HP_max = level_num * 50f;
+		ATK = level_num * 10;
+		DEF = level_num * 5;
+		DropGold = level_num * 300;
+		DropEXP = level_num * 50;
 	}
 
 }
