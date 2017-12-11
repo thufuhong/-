@@ -21,6 +21,7 @@ public class MainMenu_Sever : MonoBehaviour {
     public void ChooseCharacter(int x)
     {
         PlayerPrefs.SetInt("Character", x);
+		PlayerPrefs.SetInt ("level_num", 1);
         BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
         CameraTarget = CameraTarget + DeltaCenter;
         Invoke("LoadFirstScene", 2);
