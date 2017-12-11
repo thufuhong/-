@@ -53,8 +53,7 @@ public class Safe_area_sever : MonoBehaviour
     void Start () 
 	{
 		//read the attribute of player
-		if (player_attribute.level_num > 1)
-			player_attribute.ReadPlayerAttribute ();
+		player_attribute.ReadPlayerAttribute ();
 
 
 
@@ -81,13 +80,17 @@ public class Safe_area_sever : MonoBehaviour
                 player.transform.Find("Attack_area").gameObject.SetActive(false);
                 player.GetComponent<ThirdPersonUserControl>().attack_object = attack_crystal;
                 player.GetComponent<attribute>().ZhiYe = "法师";
-                player.GetComponent<attribute>().ATK = 50;
-                player.GetComponent<attribute>().DEF = 5;
-                player.GetComponent<attribute>().ATKGrowth = 3;
-                player.GetComponent<attribute>().DEFGrowth = 0.2f;
-                player.GetComponent<attribute>().HPGrowth = 10f;
-                player.GetComponent<attribute>().FireRate = 0.8f;
-                player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.2f;
+				if(player_attribute.level_num == 1)
+				{
+                	player.GetComponent<attribute>().ATK = 50;
+                	player.GetComponent<attribute>().DEF = 5;
+                	player.GetComponent<attribute>().ATKGrowth = 3f * 5f;
+                	player.GetComponent<attribute>().DEFGrowth = 0.2f * 5f;
+                	player.GetComponent<attribute>().HPGrowth = 10f;
+                	player.GetComponent<attribute>().FireRate = 0.8f;
+                	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.2f;
+					player_attribute.AttributeInit();
+				}
 
             }
             if (_charac == 0)
@@ -110,13 +113,17 @@ public class Safe_area_sever : MonoBehaviour
                 player.transform.Find("Attack_area").gameObject.SetActive(true);
                 player.GetComponent<ThirdPersonUserControl>().attack_object = attack_axe;
                 player.GetComponent<attribute>().ZhiYe = "战士";
-                player.GetComponent<attribute>().ATK = 30;
-                player.GetComponent<attribute>().DEF = 10;
-                player.GetComponent<attribute>().ATKGrowth = 1.5f;
-                player.GetComponent<attribute>().DEFGrowth = 1f;
-                player.GetComponent<attribute>().HPGrowth = 20f;
-                player.GetComponent<attribute>().FireRate = 0.6f;
-                player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.5f;
+				if(player_attribute.level_num == 1)
+				{
+					player.GetComponent<attribute>().ATK = 30;
+                	player.GetComponent<attribute>().DEF = 10;
+                	player.GetComponent<attribute>().ATKGrowth = 1.5f * 5f;
+                	player.GetComponent<attribute>().DEFGrowth = 1f * 5f;
+                	player.GetComponent<attribute>().HPGrowth = 20f;
+                	player.GetComponent<attribute>().FireRate = 0.6f;
+                	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.5f;
+					player_attribute.AttributeInit();
+				}
 
             }
         }
@@ -171,7 +178,7 @@ public class Safe_area_sever : MonoBehaviour
 				Vector3 t = new Vector3(SafeCenter.x,3.9f,SafeCenter.z);
 				while (gameobject_generate.IsCoincide (new GameObjectGenerate.GameObjectNode (t.x, t.y, t.z, boss_length, boss_width, 0)))
 				{
-					t = t + new Vector3 (UnityEngine.Random.Range (-2f * boss_length, 2f * boss_length), 0, UnityEngine.Random.Range (-2f * boss_width, 2f * boss_width));
+					t = t + new Vector3 (UnityEngine.Random.Range (-4f * boss_length, 4f * boss_length), 0, UnityEngine.Random.Range (-4f * boss_width, 4f * boss_width));
 				}
 				Boss.transform.position = t;
 
