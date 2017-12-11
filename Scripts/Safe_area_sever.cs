@@ -52,8 +52,11 @@ public class Safe_area_sever : MonoBehaviour
     // Use this for initialization
     void Start () 
 	{
-		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "LevelSecond")
+		//read the attribute of player
+		if (player_attribute.level_num > 1)
 			player_attribute.ReadPlayerAttribute ();
+
+
 
         try
         {
@@ -203,10 +206,10 @@ public class Safe_area_sever : MonoBehaviour
             player.GetComponent<attribute>().update_HP(player.GetComponent<attribute>().HP_max);
             shop.transform.position = Boss.transform.position;
             shop.SetActive(true);
+
             //event when success
 
-			player_attribute.SavePlayerAttribute();
-			//UnityEngine.SceneManagement.SceneManager.LoadScene("LevelSecond");
+			//player_attribute.SavePlayerAttribute();
 
             return;
         }
