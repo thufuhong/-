@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 using UnityEngine.UI;
+using System.IO;
 
-public class attribute : MonoBehaviour {
+public class attribute : MonoBehaviour 
+{
     public GameObject SkillUp_button;
     public GameObject Skill_1_Icon;
     public GameObject Skill_2_Icon;
@@ -17,9 +19,9 @@ public class attribute : MonoBehaviour {
     public float MP_max = 100f;
     public float EXP = 0;
     public float Level = 1;
-    public float ATKGrowth = 2;
-    public float DEFGrowth = 2;
-    public float HPGrowth = 20;
+    public float ATKGrowth = 10f;
+    public float DEFGrowth = 5f;
+    public float HPGrowth = 20f;
     public float MPGrowth = 10;
     public float EXPForLevelUp = 1000f;
     public float gold = 0;
@@ -50,6 +52,8 @@ public class attribute : MonoBehaviour {
 
 
 	public int level_num = 1;
+
+
     
 
     public float update_HP(float value)
@@ -174,6 +178,8 @@ public class attribute : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+
+
         if(ForceBackCounter>=0)
         {
             this.gameObject.transform.position = this.gameObject.transform.position +
@@ -216,6 +222,8 @@ public class attribute : MonoBehaviour {
 		PlayerPrefs.SetFloat ("Skill_Level2", Skill_Level[2]);
 		PlayerPrefs.SetFloat ("Skill_Level3", Skill_Level[3]);
 
+		PlayerPrefs.SetInt ("level_num", level_num);
+
 
 
 	}
@@ -229,7 +237,7 @@ public class attribute : MonoBehaviour {
 		MP_max = PlayerPrefs.GetFloat ("MP_max", 100);
 		EXP = PlayerPrefs.GetFloat ("EXP", 0);
 		Level = PlayerPrefs.GetFloat ("Level", 1);
-		ATKGrowth = PlayerPrefs.GetFloat ("ATKGrowth", 5);
+		ATKGrowth = PlayerPrefs.GetFloat ("ATKGrowth", 10);
 		DEFGrowth = PlayerPrefs.GetFloat ("DEFGrowth", 5);
 		HPGrowth = PlayerPrefs.GetFloat ("HPGrowth", 20);
 		MPGrowth = PlayerPrefs.GetFloat ("MPGrowth", 10);
@@ -258,6 +266,9 @@ public class attribute : MonoBehaviour {
 		Skill_Level[2] = PlayerPrefs.GetFloat ("Skill_Level2", 0);
 		Skill_Level[3] = PlayerPrefs.GetFloat ("Skill_Level3", 0);
 
+		level_num = PlayerPrefs.GetInt ("level_num", 1);
+
+
 
 		ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
 		ui_HP.value = Mathf.Max(HP, 0) / HP_max;
@@ -272,4 +283,74 @@ public class attribute : MonoBehaviour {
 		DropEXP = level_num * 50;
 	}
 
+	private void PrintAttribute()
+	{
+		//just for debug
+		Debug.Log ("ATK Growth:"+ATKGrowth.ToString());
+		Debug.Log ("DEF Growth:"+DEFGrowth.ToString());
+		Debug.Log ("ATK:"+ATK.ToString());
+		Debug.Log ("DEF:"+DEF.ToString());
+	}
+
+	public void AttributeInit()
+	{
+		HP_max = 100;
+		BallisticSpeed = 10;
+		BallisticDamage = -34;
+		//FireRate = PlayerPrefs.GetFloat ("FireRate", 1);
+		MP_max = 100;
+		EXP = 0;
+		Level = 1;
+		//ATKGrowth = PlayerPrefs.GetFloat ("ATKGrowth", 10);
+		//DEFGrowth = PlayerPrefs.GetFloat ("DEFGrowth", 5);
+		//HPGrowth = PlayerPrefs.GetFloat ("HPGrowth", 20);
+		//MPGrowth = PlayerPrefs.GetFloat ("MPGrowth", 10);
+		EXPForLevelUp = 1000;
+		gold = 0;
+		DropGold = 100;
+		team = 600;
+
+		ifAlive = true;
+		if_Player = true;
+		ForceBackDerection = new Vector3 (0, 0, 0);
+		//ifAlive = PlayerPrefs.GetFloat ("ifAlive", 100);
+		//if_Player = PlayerPrefs.GetFloat ("if_Player", 100);
+
+		HP = 100;
+		MP = 100;
+		//ATK = PlayerPrefs.GetFloat ("ATK", 90);
+		//DEF = PlayerPrefs.GetFloat ("DEF", 10);
+		ForceBackPower = 1;
+		ForceBackCounterMax = 10;
+		ForceBackCounter = -1;
+
+		skillUp_Num = 0;
+		Skill_Level[0] = 0;
+		Skill_Level[1] = 0;
+		Skill_Level[2] = 0;
+		Skill_Level[3] = 0;
+
+		level_num = 1;
+	}
+
+	public void SaveAttributeInFile()
+	{
+		Stream sw;
+		FileInfo t = new FileInfo ("");
+		if (!t.Exists)
+		{
+			
+		} 
+		else
+		{
+			
+		}
+		sw.Write ();
+
+	}
+
+	public void ReadAttributeFromFile()
+	{
+
+	}
 }

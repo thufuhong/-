@@ -161,7 +161,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             m_Move = 3f * v * this.transform.forward + 1f * h * this.transform.right;
 
             int state_now = m_Animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
-            if (state_now == Animator.StringToHash("Grounded") && Input.GetKeyDown(KeyCode.LeftAlt) && CoolDownTime <= 0) //If use mouse, change to Input.GetButtonDown("Fire1")
+            if (state_now == Animator.StringToHash("Grounded") && Input.GetKeyDown(KeyCode.J) && CoolDownTime <= 0) //If use mouse, change to Input.GetButtonDown("Fire1")
             {
                 CoolDownTime = _attri.FireRate;
                 m_Animator.SetFloat("Random", UnityEngine.Random.Range(0f, 1f));
