@@ -45,10 +45,11 @@ public class shop : MonoBehaviour {
                 shopOpened = true;
                 //Put SHOP code here
             }
-			if (!shopOpened && Input.GetKeyDown (KeyCode.N))
+			if (Input.GetKeyDown (KeyCode.N))
 			{
 				//next level
 				player_attribute.level_num++;
+				player_attribute.SavePlayerAttribute ();
 				UnityEngine.SceneManagement.SceneManager.LoadScene ("LevelFirst");
 			}
             
