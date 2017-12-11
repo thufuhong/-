@@ -50,6 +50,7 @@ public class shop : MonoBehaviour {
 				//next level
 				player_attribute.level_num++;
 				player_attribute.SavePlayerAttribute ();
+				player_attribute.SaveAttributeInFile ();
 				UnityEngine.SceneManagement.SceneManager.LoadScene ("LevelFirst");
 			}
             
