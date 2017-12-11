@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 using UnityEngine.UI;
 using System.IO;
+using System.Text;
 
 public class attribute : MonoBehaviour 
 {
@@ -335,22 +336,168 @@ public class attribute : MonoBehaviour
 
 	public void SaveAttributeInFile()
 	{
-		Stream sw;
-		FileInfo t = new FileInfo ("");
-		if (!t.Exists)
-		{
-			
-		} 
-		else
-		{
-			
-		}
-		sw.Write ();
+		StreamWriter sw;
+		string path = Application.dataPath;
+		string dir = "/save/";
+		string name = "GameSave";
+		string format = ".mygame";
+		if (!Directory.Exists (path + dir))
+			Directory.CreateDirectory (path + dir);
 
+		FileStream fs = new FileStream(path + dir + name + format,FileMode.OpenOrCreate);
+		sw = new StreamWriter (fs);
+
+
+		sw.WriteLine ("HP_max " + HP_max.ToString());
+		sw.WriteLine ("BallisticSpeed " + BallisticSpeed.ToString());
+		sw.WriteLine ("BallisticDamage " + BallisticDamage.ToString());
+		sw.WriteLine ("FireRate " + FireRate.ToString());
+		sw.WriteLine ("MP_max " + MP_max.ToString());
+		sw.WriteLine ("EXPmax " + EXP.ToString());
+		sw.WriteLine ("Level " + Level.ToString());
+		sw.WriteLine ("ATKGrowth " + ATKGrowth.ToString());
+		sw.WriteLine ("DEFGrowth " + DEFGrowth.ToString());
+		sw.WriteLine ("HPGrowth " + HPGrowth.ToString());
+		sw.WriteLine ("MPGrowth " + MPGrowth.ToString());
+		sw.WriteLine ("EXPForLevelUp " + EXPForLevelUp.ToString());
+		sw.WriteLine ("gold " + gold.ToString());
+		sw.WriteLine ("DropGold " + DropGold.ToString());
+		sw.WriteLine ("team " + team.ToString());
+		sw.WriteLine ("HP " + HP.ToString());
+		sw.WriteLine ("MP " + MP.ToString());
+		sw.WriteLine ("ATK " + ATK.ToString());
+		sw.WriteLine ("DEF " + DEF.ToString());
+		sw.WriteLine ("ForceBackPower " + ForceBackPower.ToString());
+		sw.WriteLine ("ForceBackCounterMax " + ForceBackCounterMax.ToString());
+		sw.WriteLine ("ForceBackCounter " + ForceBackCounter.ToString());
+		sw.WriteLine ("skillUp_Num " + skillUp_Num.ToString());
+		sw.WriteLine ("Skill_Level0 " + Skill_Level[0].ToString());
+		sw.WriteLine ("Skill_Level1 " + Skill_Level[1].ToString());
+		sw.WriteLine ("Skill_Level2 " + Skill_Level[2].ToString());
+		sw.WriteLine ("Skill_Level3 " + Skill_Level[3].ToString());
+		sw.WriteLine ("level_num " + level_num.ToString());
+
+
+		sw.Close ();
 	}
 
 	public void ReadAttributeFromFile()
 	{
+		StreamReader sr;
+		string path = Application.dataPath;
+		string dir = "/save/";
+		string name = "GameSave";
+		string format = ".mygame";
+		if (!Directory.Exists (path + dir))
+			Directory.CreateDirectory (path + dir);
+		FileInfo t = new FileInfo (path + dir + name + format);
+		if (!t.Exists)
+		{
+			
+		}
+		FileStream fs = new FileStream(path + dir + name + format,FileMode.OpenOrCreate);
+		sr = new StreamReader (fs);
+		string str = sr.ReadLine ();
+		string[] strArray = str.Split (' ');
+		HP_max = float.Parse (strArray [1]);
 
+
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		BallisticSpeed = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		BallisticDamage = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		FireRate = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		MP_max = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		EXP = float.Parse (strArray [1]);
+
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		Level = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		ATKGrowth = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		DEFGrowth = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		HPGrowth = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		MPGrowth = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		EXPForLevelUp = float.Parse (strArray [1]);
+
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		gold = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		DropGold = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		team = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		HP = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		MP = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		ATK = float.Parse (strArray [1]);
+
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		DEF = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		ForceBackPower = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		ForceBackCounterMax = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		ForceBackCounter = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		skillUp_Num = int.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		Skill_Level[0] = float.Parse (strArray [1]);
+
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		Skill_Level[1] = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		Skill_Level[2] = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		Skill_Level[3] = float.Parse (strArray [1]);
+		str = sr.ReadLine ();
+		strArray = str.Split (' ');
+		level_num = int.Parse (strArray [1]);
+
+
+		ifAlive = true;
+		if_Player = true;
+		ForceBackDerection = new Vector3 (0, 0, 0);
+
+		sr.Close ();
+
+		Debug.Log ("Level" + Level.ToString ());
+
+		ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
+		ui_HP.value = Mathf.Max(HP, 0) / HP_max;
 	}
 }
