@@ -7,6 +7,7 @@ public class shop : MonoBehaviour {
     public GameObject player;
     public GameObject ShopObject;
     public Text mainHelper;
+	public attribute player_attribute;
 
     public bool isPlayerNearBy = false;
     private bool shopOpened = false;
@@ -44,8 +45,12 @@ public class shop : MonoBehaviour {
                 shopOpened = true;
                 //Put SHOP code here
             }
-			if(!shopOpened && Input.GetKeyDown(KeyCode.N))
-				UnityEngine.SceneManagement.SceneManager.LoadScene("LevelSecond");
+			if (!shopOpened && Input.GetKeyDown (KeyCode.N))
+			{
+				//next level
+				player_attribute.level_num++;
+				UnityEngine.SceneManagement.SceneManager.LoadScene ("LevelFirst");
+			}
             
         }
         if (isPlayerNearBy && (this.gameObject.transform.position - player.transform.position).sqrMagnitude >600)
