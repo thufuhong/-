@@ -59,9 +59,15 @@ public class Safe_area_sever : MonoBehaviour
 
 		//player_attribute.SaveAttributeInFile ();
 
-		player_attribute.ReadAttributeFromFile ();
+		//player_attribute.ReadAttributeFromFile ();
 
-
+		Debug.Log (player_attribute.GetSaveTimeFromFile ());
+		Debug.Log (player_attribute.GetLevelOfPlayerFromFile ().ToString ());
+		Debug.Log (player_attribute.GetLevelOfGameFromFile ().ToString ());
+		Debug.Log (player_attribute.GetGoldOfPlayerFromFile ().ToString ());
+		Debug.Log(player_attribute.GetAttributeFromFile ("gold"));
+		Debug.Log(player_attribute.GetAttributeFromFile ("Level",0));
+		Debug.Log(player_attribute.GetAttributeFromFile ("level_num"));
 
         try
         {
