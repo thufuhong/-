@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 using UnityEngine.UI;
+using System.Text;
 
 public class Safe_area_sever : MonoBehaviour 
 {
@@ -52,22 +53,72 @@ public class Safe_area_sever : MonoBehaviour
     // Use this for initialization
     void Start () 
 	{
+		
+		string strTest = "HP_max 1260\nBallisticSpeed 10\nBallisticDamage -34\nFireRate 0.6\nMP_max 680\nEXPmax 400\nLevel 59\nATKGrowth 7.5\nDEFGrowth 5\nHPGrowth 20\nMPGrowth 10\nEXPForLevelUp 1000\ngold 898\nDropGold 100\nteam 600\nHP 1260\nMP 100\nATK 578.75\nDEF 332.8571\nForceBackPower 1\nForceBackCounterMax 10\nForceBackCounter -1\nskillUp_Num 16\nSkill_Level0 1\nSkill_Level1 18\nSkill_Level2 2\nSkill_Level3 21\nlevel_num 13\nsave_time 12/13/2017 6:49:15 PM";
+
+		string testString = "\n\n\n";
+		byte[] byteString = Encoding.UTF8.GetBytes (strTest);
+		byte max = 0, min = 0x7f;
+
+		int temp = 0;
+		Debug.Log (temp++);
+		Debug.Log (++temp);
+		/*
+		for (int i = 0; i < testString.Length; i++)
+		{
+			if (testString [i] == '\n')
+				testString [i] = '@';
+			/*
+			if (byteString [i] < min)
+				min = byteString [i];
+			if (byteString [i] == 58)
+				Debug.Log("Fail");
+			Debug.Log (byteString [i]);
+			*/
+		//}
+		/*
+		for (int i = 0; i < byteString.Length; i++)
+		{
+			if (byteString [i] > max)
+				max = byteString [i];
+			if (byteString [i] < min)
+				min = byteString [i];
+			if (byteString [i] == 64)
+				Debug.Log("Fail");
+			//Debug.Log (byteString [i]);
+		}
+		Debug.Log ("max:" + max.ToString ());
+		Debug.Log ("min:" + min.ToString ());
+		string str1 = player_attribute.Encrypt (strTest);
+		string str2 = player_attribute.Decrypt (str1);
+		Debug.Log (strTest);
+		Debug.Log (str1);
+		Debug.Log (str2);
+		*/
+		//player_attribute.DecryptDES (player_attribute.EncryptDES (testString, player_attribute.Key), player_attribute.Key);
+
 		//read the attribute of player
-		//player_attribute.ReadPlayerAttribute ();
+		player_attribute.ReadPlayerAttribute ();
 
 
+		player_attribute.SaveAttributeInFile ();
 
-		//player_attribute.SaveAttributeInFile ();
+		player_attribute.ReadAttributeFromFile ();
 
-		//player_attribute.ReadAttributeFromFile ();
+		player_attribute.SaveAttributeInFile ();
 
 		Debug.Log (player_attribute.GetSaveTimeFromFile ());
+
 		Debug.Log (player_attribute.GetLevelOfPlayerFromFile ().ToString ());
 		Debug.Log (player_attribute.GetLevelOfGameFromFile ().ToString ());
 		Debug.Log (player_attribute.GetGoldOfPlayerFromFile ().ToString ());
 		Debug.Log(player_attribute.GetAttributeFromFile ("gold"));
 		Debug.Log(player_attribute.GetAttributeFromFile ("Level",0));
 		Debug.Log(player_attribute.GetAttributeFromFile ("level_num"));
+
+
+
+		//player_attribute.DecryptDES (player_attribute.EncryptDES ("HP_max", player_attribute.Key), player_attribute.Key);
 
         try
         {
