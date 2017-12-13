@@ -5,6 +5,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
 using UnityEngine.UI;
 using System.IO;
 using System.Text;
+using System.Security.Cryptography;
 
 public class attribute : MonoBehaviour 
 {
@@ -314,9 +315,6 @@ public class attribute : MonoBehaviour
 		ifAlive = true;
 		if_Player = true;
 		ForceBackDerection = new Vector3 (0, 0, 0);
-		//ifAlive = PlayerPrefs.GetFloat ("ifAlive", 100);
-		//if_Player = PlayerPrefs.GetFloat ("if_Player", 100);
-
 		HP = 100;
 		MP = 100;
 		//ATK = PlayerPrefs.GetFloat ("ATK", 90);
@@ -346,38 +344,41 @@ public class attribute : MonoBehaviour
 		if(num_save > 0)
 			name = name + num_str;
 		FileStream fs = new FileStream(path + dir + name + format,FileMode.OpenOrCreate);
+		string tempString = "";
 		using (StreamWriter sw = new StreamWriter (fs))
 		{
-			sw.WriteLine ("HP_max " + HP_max.ToString ());
-			sw.WriteLine ("BallisticSpeed " + BallisticSpeed.ToString ());
-			sw.WriteLine ("BallisticDamage " + BallisticDamage.ToString ());
-			sw.WriteLine ("FireRate " + FireRate.ToString ());
-			sw.WriteLine ("MP_max " + MP_max.ToString ());
-			sw.WriteLine ("EXPmax " + EXP.ToString ());
-			sw.WriteLine ("Level " + Level.ToString ());
-			sw.WriteLine ("ATKGrowth " + ATKGrowth.ToString ());
-			sw.WriteLine ("DEFGrowth " + DEFGrowth.ToString ());
-			sw.WriteLine ("HPGrowth " + HPGrowth.ToString ());
-			sw.WriteLine ("MPGrowth " + MPGrowth.ToString ());
-			sw.WriteLine ("EXPForLevelUp " + EXPForLevelUp.ToString ());
-			sw.WriteLine ("gold " + gold.ToString ());
-			sw.WriteLine ("DropGold " + DropGold.ToString ());
-			sw.WriteLine ("team " + team.ToString ());
-			sw.WriteLine ("HP " + HP.ToString ());
-			sw.WriteLine ("MP " + MP.ToString ());
-			sw.WriteLine ("ATK " + ATK.ToString ());
-			sw.WriteLine ("DEF " + DEF.ToString ());
-			sw.WriteLine ("ForceBackPower " + ForceBackPower.ToString ());
-			sw.WriteLine ("ForceBackCounterMax " + ForceBackCounterMax.ToString ());
-			sw.WriteLine ("ForceBackCounter " + ForceBackCounter.ToString ());
-			sw.WriteLine ("skillUp_Num " + skillUp_Num.ToString ());
-			sw.WriteLine ("Skill_Level0 " + Skill_Level [0].ToString ());
-			sw.WriteLine ("Skill_Level1 " + Skill_Level [1].ToString ());
-			sw.WriteLine ("Skill_Level2 " + Skill_Level [2].ToString ());
-			sw.WriteLine ("Skill_Level3 " + Skill_Level [3].ToString ());
-			sw.WriteLine ("level_num " + level_num.ToString ());
+			tempString += ("HP_max " + HP_max.ToString () + "\n");
+			tempString += ("BallisticSpeed " + BallisticSpeed.ToString () + "\n");
+			tempString += ("BallisticDamage " + BallisticDamage.ToString () + "\n");
+			tempString += ("FireRate " + FireRate.ToString () + "\n");
+			tempString += ("MP_max " + MP_max.ToString () + "\n");
+			tempString += ("EXPmax " + EXP.ToString () + "\n");
+			tempString += ("Level " + Level.ToString () + "\n");
+			tempString += ("ATKGrowth " + ATKGrowth.ToString () + "\n");
+			tempString += ("DEFGrowth " + DEFGrowth.ToString () + "\n");
+			tempString += ("HPGrowth " + HPGrowth.ToString () + "\n");
+			tempString += ("MPGrowth " + MPGrowth.ToString () + "\n");
+			tempString += ("EXPForLevelUp " + EXPForLevelUp.ToString () + "\n");
+			tempString += ("gold " + gold.ToString () + "\n");
+			tempString += ("DropGold " + DropGold.ToString () + "\n");
+			tempString += ("team " + team.ToString () + "\n");
+			tempString += ("HP " + HP.ToString () + "\n");
+			tempString += ("MP " + MP.ToString () + "\n");
+			tempString += ("ATK " + ATK.ToString () + "\n");
+			tempString += ("DEF " + DEF.ToString () + "\n");
+			tempString += ("ForceBackPower " + ForceBackPower.ToString () + "\n");
+			tempString += ("ForceBackCounterMax " + ForceBackCounterMax.ToString () + "\n");
+			tempString += ("ForceBackCounter " + ForceBackCounter.ToString () + "\n");
+			tempString += ("skillUp_Num " + skillUp_Num.ToString () + "\n");
+			tempString += ("Skill_Level0 " + Skill_Level [0].ToString () + "\n");
+			tempString += ("Skill_Level1 " + Skill_Level [1].ToString () + "\n");
+			tempString += ("Skill_Level2 " + Skill_Level [2].ToString () + "\n");
+			tempString += ("Skill_Level3 " + Skill_Level [3].ToString () + "\n");
+			tempString += ("level_num " + level_num.ToString () + "\n");
 			save_time = System.DateTime.Now.ToString ();
-			sw.WriteLine ("save_time " + save_time);
+			tempString += ("save_time " + save_time);
+			string encryptString = Encrypt (tempString);
+			sw.Write (encryptString);
 		}
 		fs.Close ();
 	}
@@ -401,98 +402,100 @@ public class attribute : MonoBehaviour
 		FileStream fs = new FileStream(path + dir + name + format,FileMode.OpenOrCreate);
 		using (StreamReader sr = new StreamReader (fs))
 		{
-			string str = sr.ReadLine ();
-			string[] strArray = str.Split (' ');
+			int index = 0;
+			string readStr = sr.ReadToEnd ();
+			string result = Decrypt (readStr);
+			string[] allArray = result.Split ('\n');
+			string[] strArray = allArray [index++].Split (' ');
 			HP_max = float.Parse (strArray [1]);
 
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			strArray = allArray [index++].Split (' ');
 			BallisticSpeed = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			BallisticDamage = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			FireRate = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			MP_max = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			EXP = float.Parse (strArray [1]);
 
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			Level = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			ATKGrowth = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			DEFGrowth = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			HPGrowth = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			MPGrowth = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			EXPForLevelUp = float.Parse (strArray [1]);
 
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			gold = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			DropGold = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			team = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			HP = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			MP = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			ATK = float.Parse (strArray [1]);
 
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			DEF = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			ForceBackPower = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			ForceBackCounterMax = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			ForceBackCounter = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			skillUp_Num = int.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			Skill_Level [0] = float.Parse (strArray [1]);
 
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			Skill_Level [1] = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			Skill_Level [2] = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			Skill_Level [3] = float.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
+			
+			strArray = allArray [index++].Split (' ');
 			level_num = int.Parse (strArray [1]);
-			str = sr.ReadLine ();
-			strArray = str.Split (' ');
-			save_time = strArray [1];
+			
+			strArray = allArray [index++].Split (' ');
+			save_time = strArray [1] + " " + strArray [2] + " " + strArray [3];
 
 
 			ifAlive = true;
@@ -524,14 +527,15 @@ public class attribute : MonoBehaviour
 		FileStream fs = new FileStream(path + dir + name + format,FileMode.Open);
 		using (StreamReader sr = new StreamReader (fs))
 		{
-			string str = sr.ReadToEnd ();
+			string decryptString = sr.ReadToEnd ();	
+			string str = Decrypt (decryptString);
 			string[] strArray = str.Split (' ', '\n');
 			for (int i = 0; i < str.Length; i++)
 			{
 				if (strArray [i] == _attribute)
 				{
 					if (_attribute == "save_time")
-						return strArray [i + 1] + strArray [i + 2] + strArray [i + 3];	
+						return strArray [i + 1] + " " + strArray [i + 2] + " " + strArray [i + 3];	
 					fs.Close ();
 					return strArray [i + 1];
 				}
@@ -563,6 +567,151 @@ public class attribute : MonoBehaviour
 	public string GetSaveTimeFromFile(int num_save = 0)
 	{
 		return GetAttributeFromFile ("save_time", num_save);
+	}
+
+	private string Keys = "abcdefghabcdefgh";
+	public string Key = "abcdefgh";
+
+	public string EncryptDES(string encryptString,string encryptKey)
+	{
+		try
+		{
+			
+			byte[] byteKey = Encoding.UTF8.GetBytes(encryptKey.Substring(0,8));
+			byte[] byteKeys = Encoding.UTF8.GetBytes(Keys);
+			byte[] byteString = Encoding.UTF8.GetBytes(encryptString);
+
+			/*
+			RijndaelManaged rDel = new RijndaelManaged();
+			rDel.Key = byteKeys;
+			rDel.BlockSize = 128;
+			rDel.Mode = CipherMode.CBC;
+			rDel.IV = rDel.Key;
+			rDel.Padding = PaddingMode.ISO10126;
+			ICryptoTransform cTransform = rDel.CreateEncryptor();
+			byte [] resultArray = cTransform.TransformFinalBlock(byteString,0,byteString.Length);
+			return Encoding.UTF8.GetString(resultArray);
+			*/
+
+
+			string str = null;
+			DESCryptoServiceProvider dCSP = new DESCryptoServiceProvider();
+			using (MemoryStream mStream = new MemoryStream())
+			{
+			
+				using(CryptoStream cStream = new CryptoStream(mStream,dCSP.CreateEncryptor(byteKey,byteKeys),CryptoStreamMode.Write))
+				{
+				cStream.Write(byteString,0,byteString.Length);
+				cStream.FlushFinalBlock();
+				//cStream.Close();
+			
+			Debug.Log("string before En");
+			Debug.Log(encryptString.Length);
+			Debug.Log(encryptString);
+			Debug.Log("byte before En");
+			Debug.Log(byteString.Length);
+			Debug.Log(byteString);
+			Debug.Log("En byte array");
+			Debug.Log(mStream.ToArray().Length);
+			Debug.Log(mStream.ToArray());
+			Debug.Log("string after En");
+					str = Encoding.UTF8.GetString(mStream.ToArray());
+			Debug.Log(Encoding.UTF8.GetString(mStream.ToArray()).Length);
+			Debug.Log(Encoding.UTF8.GetString(mStream.ToArray()));
+			
+				//return Encoding.UTF8.GetString(mStream.ToArray());
+				}
+			}
+			return str;
+
+		}
+		catch
+		{
+			Debug.Log("EN Fail!!!!!!!!!!!!!!!");
+			return encryptString;
+		}
+	}
+
+	public string DecryptDES(string decryptString,string decryptKey)
+	{
+		
+		try
+		{
+			byte[] byteKey = Encoding.UTF8.GetBytes(decryptKey.Substring(0,8));
+			byte[] byteKeys = Encoding.UTF8.GetBytes(Keys);
+			byte[] byteString = Encoding.UTF8.GetBytes(decryptString);
+
+			string str = null;
+
+			DESCryptoServiceProvider dCSP = new DESCryptoServiceProvider();
+
+			using(MemoryStream mStream = new MemoryStream())
+			{
+				using(CryptoStream cStream = new CryptoStream(mStream,dCSP.CreateDecryptor(byteKey,byteKeys),CryptoStreamMode.Write))
+				{
+			cStream.Write(byteString,0,byteString.Length);
+			Debug.Log("De byte array before De");
+			Debug.Log(byteString.Length);
+			Debug.Log(byteString);
+			//cStream.Flush();
+			cStream.FlushFinalBlock();
+			//cStream.Close();
+			Debug.Log("string after De");
+					str = Encoding.UTF8.GetString(mStream.ToArray());
+			Debug.Log(Encoding.UTF8.GetString(mStream.ToArray()).Length);
+			Debug.Log(Encoding.UTF8.GetString(mStream.ToArray()));
+			//return Encoding.UTF8.GetString(mStream.ToArray());
+				}
+			}
+
+			return str;
+			/*
+			RijndaelManaged rDel = new RijndaelManaged();
+			rDel.Key = byteKeys;
+			rDel.BlockSize = 128;
+			rDel.Mode = CipherMode.CBC;
+			rDel.IV = rDel.Key;
+			rDel.Padding = PaddingMode.ISO10126;
+			ICryptoTransform cTransform = rDel.CreateDecryptor();
+			byte [] resultArray = cTransform.TransformFinalBlock(byteString,0,byteString.Length);
+			return Encoding.UTF8.GetString(resultArray);
+			*/
+		}
+		catch (System.Exception ex)
+		{
+			Debug.Log("DE Fail!!!!!!!!!!!!!!!");
+			Debug.Log (ex);
+			return decryptString;
+		}
+	}
+
+
+	public string Encrypt(string enString)
+	{
+		byte[] byteString = Encoding.ASCII.GetBytes (enString);
+		for (int i = 0; i < byteString.Length; i++)
+		{
+			if (byteString [i] < 0x40)
+				byteString [i] -= 10;
+			else
+				byteString [i] += 7;
+		}
+		string result = Encoding.ASCII.GetString (byteString);
+		return result;
+	}
+
+	public string Decrypt(string deString)
+	{
+		byte[] byteString = Encoding.ASCII.GetBytes (deString);
+		for (int i = 0; i < byteString.Length; i++)
+		{
+			if (byteString [i] < 0x40 - 10)
+				byteString [i] += 10;
+			else
+				byteString [i] -= 7;
+		}
+		string result = Encoding.ASCII.GetString (byteString);
+		return result;
 	}
 
 }
