@@ -107,7 +107,7 @@ public class GameObjectGenerate : MonoBehaviour
 		Debug.Log (GameObjectList.Count.ToString() + "\t");
 		while (current != null)
 		{
-			//Debug.Log (current.Value.x.ToString () + "\t" + current.Value.z.ToString ());
+			Debug.Log (current.Value.x.ToString () + "\t" + current.Value.z.ToString ());
 			current = current.Next;
 		}
 	}
@@ -130,6 +130,7 @@ public class GameObjectGenerate : MonoBehaviour
 			GenerateMoutain (3);
 		}
 
+		/*
 		{
 			//test of the LinkedList,you can ignore it
 
@@ -162,6 +163,7 @@ public class GameObjectGenerate : MonoBehaviour
 
 			ListPrint ();
 		}
+		*/
 
 		//
 		transform.Find ("/Canvas").gameObject.GetComponent<EnterWindow> ().InitFunction ();
@@ -176,6 +178,7 @@ public class GameObjectGenerate : MonoBehaviour
 	//generate count enemys
 	void GenetateEnemy(int count)
 	{
+		int game_level = player.GetComponent<attribute> ().level_num;
 		Vector3 t;
 		for (int i = 0; i < count; i++)
 		{
@@ -191,6 +194,18 @@ public class GameObjectGenerate : MonoBehaviour
 			}
 			GameObject temp_enemy = Instantiate (enemy, t, new Quaternion ());
 			temp_enemy.GetComponent<AICharacterControl> ().target = player.transform;
+			temp_enemy.GetComponent<attribute> ().Level = game_level;
+			temp_enemy.GetComponent<attribute> ().EnemyUpdate ();
+
+			/*
+			temp_enemy.GetComponent<attribute> ().ATK = 20f * game_level + 5f;
+			temp_enemy.GetComponent<attribute> ().DEF = 10f * game_level + 5f;
+			temp_enemy.GetComponent<attribute> ().HP = temp_enemy.GetComponent<attribute> ().HP_max = 100f * game_level + 30f;
+			temp_enemy.GetComponent<attribute> ().DropGold = 10f * game_level + 10f;
+			temp_enemy.GetComponent<attribute> ().DropEXP = 300f * game_level + 200f;
+			temp_enemy.GetComponent<attribute> ().FireRate = 0.2f * game_level + 1f;
+			*/
+
 			GameObject temp_range = Instantiate (enemy_attack_area, t, new Quaternion ());
 			temp_range.GetComponent<attack_range> ().Target = temp_enemy;
 		}
