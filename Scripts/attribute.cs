@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 using UnityEngine.UI;
+using System.IO;
+using System.Text;
+using System.Security.Cryptography;
 
-public class attribute : MonoBehaviour {
+public class attribute : MonoBehaviour 
+{
     public GameObject SkillUp_button;
     public GameObject Skill_1_Icon;
     public GameObject Skill_2_Icon;
@@ -17,9 +21,9 @@ public class attribute : MonoBehaviour {
     public float MP_max = 100f;
     public float EXP = 0;
     public float Level = 1;
-    public float ATKGrowth = 2;
-    public float DEFGrowth = 2;
-    public float HPGrowth = 20;
+    public float ATKGrowth = 10f;
+    public float DEFGrowth = 5f;
+    public float HPGrowth = 20f;
     public float MPGrowth = 10;
     public float EXPForLevelUp = 1000f;
     public float gold = 0;
@@ -47,6 +51,11 @@ public class attribute : MonoBehaviour {
     public Vector3 ForceBackDerection;
 
     private int skillUp_Num = 0;
+
+
+	public int level_num = 1;
+	public string save_time;
+	public bool IsInit = false;
     
 
     public float update_HP(float value)
@@ -72,9 +81,14 @@ public class attribute : MonoBehaviour {
                     anim.ResetTrigger("stun");
                 }
                 catch { }
+                try
+                {
+                    this.gameObject.transform.Find("Died Particle").gameObject.SetActive(true);
+                }
+                catch { }
                 ifAlive = false;
                 if(this.gameObject.tag == "Team1")
-                    Destroy(this.gameObject, 1.0f);
+                    Destroy(this.gameObject, 1.5f);
                 if (this.gameObject.tag == "Team0")
                     DieWindow.SetActive(true);
                 // other event when death....
@@ -141,7 +155,7 @@ public class attribute : MonoBehaviour {
             Skill_4_Icon.GetComponent<Image>().fillAmount = 0;
         if (skillUp_Num <= 0)
             SkillUp_button.SetActive(false);
-
+        
     } 
     
     // Use this for initialization
@@ -149,10 +163,25 @@ public class attribute : MonoBehaviour {
         HP = HP_max;
         MP = MP_max;
         BallisticDamage = ATK;
-	}
+        if (Skill_Level[0] >= 1)
+            Skill_1_Icon.GetComponent<Image>().fillAmount = 0;
+        if (Skill_Level[1] >= 1)
+            Skill_2_Icon.GetComponent<Image>().fillAmount = 0;
+        if (Skill_Level[2] >= 1)
+            Skill_3_Icon.GetComponent<Image>().fillAmount = 0;
+        if (Skill_Level[3] >= 1)
+            Skill_4_Icon.GetComponent<Image>().fillAmount = 0;
+        if (Level == 1)
+            skillUp_Num++;
+        if (skillUp_Num > 0)
+            SkillUp_button.SetActive(true);
+
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+
+
         if(ForceBackCounter>=0)
         {
             this.gameObject.transform.position = this.gameObject.transform.position +
@@ -195,7 +224,12 @@ public class attribute : MonoBehaviour {
 		PlayerPrefs.SetFloat ("Skill_Level2", Skill_Level[2]);
 		PlayerPrefs.SetFloat ("Skill_Level3", Skill_Level[3]);
 
+		PlayerPrefs.SetInt ("level_num", level_num);
 
+		if(IsInit)
+			PlayerPrefs.SetInt ("IsInit", 1);
+		else
+			PlayerPrefs.SetInt ("IsInit", 0);
 
 	}
 
@@ -208,14 +242,15 @@ public class attribute : MonoBehaviour {
 		MP_max = PlayerPrefs.GetFloat ("MP_max", 100);
 		EXP = PlayerPrefs.GetFloat ("EXP", 0);
 		Level = PlayerPrefs.GetFloat ("Level", 1);
-		ATKGrowth = PlayerPrefs.GetFloat ("ATKGrowth", 5);
+		ATKGrowth = PlayerPrefs.GetFloat ("ATKGrowth", 10);
 		DEFGrowth = PlayerPrefs.GetFloat ("DEFGrowth", 5);
 		HPGrowth = PlayerPrefs.GetFloat ("HPGrowth", 20);
 		MPGrowth = PlayerPrefs.GetFloat ("MPGrowth", 10);
 		EXPForLevelUp = PlayerPrefs.GetFloat ("EXPForLevelUp", 1000);
 		gold = PlayerPrefs.GetFloat ("gold", 0);
 		DropGold = PlayerPrefs.GetFloat ("DropGold", 100);
-		team = PlayerPrefs.GetFloat ("team", 600);
+		team = PlayerPrefs.GetFloat ("team", 0);
+
 
 		ifAlive = true;
 		if_Player = true;
@@ -238,8 +273,465 @@ public class attribute : MonoBehaviour {
 		Skill_Level[3] = PlayerPrefs.GetFloat ("Skill_Level3", 0);
 
 
-		ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
-		ui_HP.value = Mathf.Max(HP, 0) / HP_max;
+
+		level_num = PlayerPrefs.GetInt ("level_num", 1);
+
+		if (PlayerPrefs.GetInt ("IsInit", 1) == 1)
+			IsInit = true;
+		else
+			IsInit = false;
+
+		//ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
+		//ui_HP.value = Mathf.Max(HP, 0) / HP_max;
+	}
+
+	public void EnemyUpdate()
+	{
+		HP = HP_max = 100f * Level + 30f;
+		ATK = 20f * Level + 5f;
+		DEF = 10f * Level + 5f;
+		DropGold = 10f * Level + 10f;
+		DropEXP = 200f * Level + 200f;
+		FireRate = 0.2f * Level + 1f;
+	}
+
+	public void BossUpdate()
+	{
+		HP = HP_max = 1000f * Level + 200f;
+		ATK = 20f * Level + 5f;
+		DEF = 10f * Level + 5f;
+		DropGold = 100f * Level + 10f;
+		DropEXP = 600f * Level + 100f;
+		FireRate = 0.2f * Level + 1f;
+	}
+
+	private void PrintAttribute()
+	{
+		//just for debug
+		Debug.Log ("ATK Growth:"+ATKGrowth.ToString());
+		Debug.Log ("DEF Growth:"+DEFGrowth.ToString());
+		Debug.Log ("ATK:"+ATK.ToString());
+		Debug.Log ("DEF:"+DEF.ToString());
+	}
+
+	public void AttributeInit()
+	{
+		HP_max = 100;
+		BallisticSpeed = 10;
+		BallisticDamage = -34;
+		//FireRate = PlayerPrefs.GetFloat ("FireRate", 1);
+		MP_max = 100;
+		EXP = 0;
+		Level = 1;
+		//ATKGrowth = PlayerPrefs.GetFloat ("ATKGrowth", 10);
+		//DEFGrowth = PlayerPrefs.GetFloat ("DEFGrowth", 5);
+		//HPGrowth = PlayerPrefs.GetFloat ("HPGrowth", 20);
+		//MPGrowth = PlayerPrefs.GetFloat ("MPGrowth", 10);
+		EXPForLevelUp = 1000;
+		gold = 0;
+		DropGold = 100;
+		team = 600;
+
+		ifAlive = true;
+		if_Player = true;
+		ForceBackDerection = new Vector3 (0, 0, 0);
+		HP = 100;
+		MP = 100;
+		//ATK = PlayerPrefs.GetFloat ("ATK", 90);
+		//DEF = PlayerPrefs.GetFloat ("DEF", 10);
+		ForceBackPower = 1;
+		ForceBackCounterMax = 10;
+		ForceBackCounter = -1;
+
+		skillUp_Num = 0;
+		Skill_Level[0] = 0;
+		Skill_Level[1] = 0;
+		Skill_Level[2] = 0;
+		Skill_Level[3] = 0;
+
+		level_num = 1;
+	}
+
+	public void SaveAttributeInFile(int num_save = 0)
+	{
+		string path = Application.dataPath;
+		string dir = "/save/";
+		string name = "GameSave";
+		string format = ".mygame";
+		if (!Directory.Exists (path + dir))
+			Directory.CreateDirectory (path + dir);
+		string num_str = num_save.ToString ();
+		if(num_save > 0)
+			name = name + num_str;
+		FileStream fs = new FileStream(path + dir + name + format,FileMode.OpenOrCreate);
+		string tempString = "";
+		using (StreamWriter sw = new StreamWriter (fs))
+		{
+			tempString += ("HP_max " + HP_max.ToString () + "\n");
+			tempString += ("BallisticSpeed " + BallisticSpeed.ToString () + "\n");
+			tempString += ("BallisticDamage " + BallisticDamage.ToString () + "\n");
+			tempString += ("FireRate " + FireRate.ToString () + "\n");
+			tempString += ("MP_max " + MP_max.ToString () + "\n");
+			tempString += ("EXPmax " + EXP.ToString () + "\n");
+			tempString += ("Level " + Level.ToString () + "\n");
+			tempString += ("ATKGrowth " + ATKGrowth.ToString () + "\n");
+			tempString += ("DEFGrowth " + DEFGrowth.ToString () + "\n");
+			tempString += ("HPGrowth " + HPGrowth.ToString () + "\n");
+			tempString += ("MPGrowth " + MPGrowth.ToString () + "\n");
+			tempString += ("EXPForLevelUp " + EXPForLevelUp.ToString () + "\n");
+			tempString += ("gold " + gold.ToString () + "\n");
+			tempString += ("DropGold " + DropGold.ToString () + "\n");
+			tempString += ("team " + team.ToString () + "\n");
+			tempString += ("HP " + HP.ToString () + "\n");
+			tempString += ("MP " + MP.ToString () + "\n");
+			tempString += ("ATK " + ATK.ToString () + "\n");
+			tempString += ("DEF " + DEF.ToString () + "\n");
+			tempString += ("ForceBackPower " + ForceBackPower.ToString () + "\n");
+			tempString += ("ForceBackCounterMax " + ForceBackCounterMax.ToString () + "\n");
+			tempString += ("ForceBackCounter " + ForceBackCounter.ToString () + "\n");
+			tempString += ("skillUp_Num " + skillUp_Num.ToString () + "\n");
+			tempString += ("Skill_Level0 " + Skill_Level [0].ToString () + "\n");
+			tempString += ("Skill_Level1 " + Skill_Level [1].ToString () + "\n");
+			tempString += ("Skill_Level2 " + Skill_Level [2].ToString () + "\n");
+			tempString += ("Skill_Level3 " + Skill_Level [3].ToString () + "\n");
+			tempString += ("level_num " + level_num.ToString () + "\n");
+			save_time = System.DateTime.Now.ToString ();
+			tempString += ("save_time " + save_time);
+			string encryptString = Encrypt (tempString);
+			sw.Write (encryptString);
+		}
+		fs.Close ();
+	}
+
+	public void ReadAttributeFromFile(int num_save = 0)
+	{
+		string path = Application.dataPath;
+		string dir = "/save/";
+		string name = "GameSave";
+		string format = ".mygame";
+		string num_str = num_save.ToString ();
+		if(num_save > 0)
+			name = name + num_str;
+		if (!Directory.Exists (path + dir))
+			Directory.CreateDirectory (path + dir);
+		FileInfo t = new FileInfo (path + dir + name + format);
+		if (!t.Exists)
+		{
+			
+		}
+		FileStream fs = new FileStream(path + dir + name + format,FileMode.OpenOrCreate);
+		using (StreamReader sr = new StreamReader (fs))
+		{
+			int index = 0;
+			string readStr = sr.ReadToEnd ();
+			string result = Decrypt (readStr);
+			string[] allArray = result.Split ('\n');
+			string[] strArray = allArray [index++].Split (' ');
+			HP_max = float.Parse (strArray [1]);
+
+			strArray = allArray [index++].Split (' ');
+			BallisticSpeed = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			BallisticDamage = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			FireRate = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			MP_max = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			EXP = float.Parse (strArray [1]);
+
+			
+			strArray = allArray [index++].Split (' ');
+			Level = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			ATKGrowth = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			DEFGrowth = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			HPGrowth = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			MPGrowth = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			EXPForLevelUp = float.Parse (strArray [1]);
+
+			
+			strArray = allArray [index++].Split (' ');
+			gold = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			DropGold = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			team = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			HP = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			MP = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			ATK = float.Parse (strArray [1]);
+
+			
+			strArray = allArray [index++].Split (' ');
+			DEF = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			ForceBackPower = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			ForceBackCounterMax = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			ForceBackCounter = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			skillUp_Num = int.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			Skill_Level [0] = float.Parse (strArray [1]);
+
+			
+			strArray = allArray [index++].Split (' ');
+			Skill_Level [1] = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			Skill_Level [2] = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			Skill_Level [3] = float.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			level_num = int.Parse (strArray [1]);
+			
+			strArray = allArray [index++].Split (' ');
+			save_time = strArray [1] + " " + strArray [2] + " " + strArray [3];
+
+
+			ifAlive = true;
+			if_Player = true;
+			ForceBackDerection = new Vector3 (0, 0, 0);
+		}
+		fs.Close ();
+		//ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
+		//ui_HP.value = Mathf.Max(HP, 0) / HP_max;
+	}
+
+	//method to get the attribute from file
+	public string GetAttributeFromFile(string _attribute,int num_save = 0)
+	{
+		string path = Application.dataPath;
+		string dir = "/save/";
+		string name = "GameSave";
+		string format = ".mygame";
+		string num_str = num_save.ToString ();
+		if(num_save > 0)
+			name = name + num_str;
+		if (!Directory.Exists (path + dir))
+			Directory.CreateDirectory (path + dir);
+		FileInfo t = new FileInfo (path + dir + name + format);
+		if (!t.Exists)
+		{
+			return " ";
+		}
+		FileStream fs = new FileStream(path + dir + name + format,FileMode.Open);
+		using (StreamReader sr = new StreamReader (fs))
+		{
+			string decryptString = sr.ReadToEnd ();	
+			string str = Decrypt (decryptString);
+			string[] strArray = str.Split (' ', '\n');
+			for (int i = 0; i < str.Length; i++)
+			{
+				if (strArray [i] == _attribute)
+				{
+					if (_attribute == "save_time")
+						return strArray [i + 1] + " " + strArray [i + 2] + " " + strArray [i + 3];	
+					fs.Close ();
+					return strArray [i + 1];
+				}
+			}
+		}
+		fs.Close ();
+		return " ";
+	}
+
+
+	public float GetLevelOfPlayerFromFile(int num_save = 0)
+	{
+		return float.Parse(GetAttributeFromFile ("Level", num_save));
+	}
+
+
+	public float GetGoldOfPlayerFromFile(int num_save = 0)
+	{
+		return float.Parse(GetAttributeFromFile ("gold", num_save));
+	}
+
+
+	public int GetLevelOfGameFromFile(int num_save = 0)
+	{
+		return int.Parse(GetAttributeFromFile ("level_num", num_save));
+	}
+
+
+	public string GetSaveTimeFromFile(int num_save = 0)
+	{
+		return GetAttributeFromFile ("save_time", num_save);
+	}
+
+	private string Keys = "abcdefghabcdefgh";
+	public string Key = "abcdefgh";
+
+	public string EncryptDES(string encryptString,string encryptKey)
+	{
+		try
+		{
+			
+			byte[] byteKey = Encoding.UTF8.GetBytes(encryptKey.Substring(0,8));
+			byte[] byteKeys = Encoding.UTF8.GetBytes(Keys);
+			byte[] byteString = Encoding.UTF8.GetBytes(encryptString);
+
+			/*
+			RijndaelManaged rDel = new RijndaelManaged();
+			rDel.Key = byteKeys;
+			rDel.BlockSize = 128;
+			rDel.Mode = CipherMode.CBC;
+			rDel.IV = rDel.Key;
+			rDel.Padding = PaddingMode.ISO10126;
+			ICryptoTransform cTransform = rDel.CreateEncryptor();
+			byte [] resultArray = cTransform.TransformFinalBlock(byteString,0,byteString.Length);
+			return Encoding.UTF8.GetString(resultArray);
+			*/
+
+
+			string str = null;
+			DESCryptoServiceProvider dCSP = new DESCryptoServiceProvider();
+			using (MemoryStream mStream = new MemoryStream())
+			{
+			
+				using(CryptoStream cStream = new CryptoStream(mStream,dCSP.CreateEncryptor(byteKey,byteKeys),CryptoStreamMode.Write))
+				{
+				cStream.Write(byteString,0,byteString.Length);
+				cStream.FlushFinalBlock();
+				//cStream.Close();
+			
+			Debug.Log("string before En");
+			Debug.Log(encryptString.Length);
+			Debug.Log(encryptString);
+			Debug.Log("byte before En");
+			Debug.Log(byteString.Length);
+			Debug.Log(byteString);
+			Debug.Log("En byte array");
+			Debug.Log(mStream.ToArray().Length);
+			Debug.Log(mStream.ToArray());
+			Debug.Log("string after En");
+					str = Encoding.UTF8.GetString(mStream.ToArray());
+			Debug.Log(Encoding.UTF8.GetString(mStream.ToArray()).Length);
+			Debug.Log(Encoding.UTF8.GetString(mStream.ToArray()));
+			
+				//return Encoding.UTF8.GetString(mStream.ToArray());
+				}
+			}
+			return str;
+
+		}
+		catch
+		{
+			Debug.Log("EN Fail!!!!!!!!!!!!!!!");
+			return encryptString;
+		}
+	}
+
+	public string DecryptDES(string decryptString,string decryptKey)
+	{
+		
+		try
+		{
+			byte[] byteKey = Encoding.UTF8.GetBytes(decryptKey.Substring(0,8));
+			byte[] byteKeys = Encoding.UTF8.GetBytes(Keys);
+			byte[] byteString = Encoding.UTF8.GetBytes(decryptString);
+
+			string str = null;
+
+			DESCryptoServiceProvider dCSP = new DESCryptoServiceProvider();
+
+			using(MemoryStream mStream = new MemoryStream())
+			{
+				using(CryptoStream cStream = new CryptoStream(mStream,dCSP.CreateDecryptor(byteKey,byteKeys),CryptoStreamMode.Write))
+				{
+			cStream.Write(byteString,0,byteString.Length);
+			Debug.Log("De byte array before De");
+			Debug.Log(byteString.Length);
+			Debug.Log(byteString);
+			//cStream.Flush();
+			cStream.FlushFinalBlock();
+			//cStream.Close();
+			Debug.Log("string after De");
+					str = Encoding.UTF8.GetString(mStream.ToArray());
+			Debug.Log(Encoding.UTF8.GetString(mStream.ToArray()).Length);
+			Debug.Log(Encoding.UTF8.GetString(mStream.ToArray()));
+			//return Encoding.UTF8.GetString(mStream.ToArray());
+				}
+			}
+
+			return str;
+			/*
+			RijndaelManaged rDel = new RijndaelManaged();
+			rDel.Key = byteKeys;
+			rDel.BlockSize = 128;
+			rDel.Mode = CipherMode.CBC;
+			rDel.IV = rDel.Key;
+			rDel.Padding = PaddingMode.ISO10126;
+			ICryptoTransform cTransform = rDel.CreateDecryptor();
+			byte [] resultArray = cTransform.TransformFinalBlock(byteString,0,byteString.Length);
+			return Encoding.UTF8.GetString(resultArray);
+			*/
+		}
+		catch (System.Exception ex)
+		{
+			Debug.Log("DE Fail!!!!!!!!!!!!!!!");
+			Debug.Log (ex);
+			return decryptString;
+		}
+	}
+
+
+	public string Encrypt(string enString)
+	{
+		byte[] byteString = Encoding.ASCII.GetBytes (enString);
+		for (int i = 0; i < byteString.Length; i++)
+		{
+			if (byteString [i] < 0x40)
+				byteString [i] -= 10;
+			else
+				byteString [i] += 7;
+		}
+		string result = Encoding.ASCII.GetString (byteString);
+		return result;
+	}
+
+	public string Decrypt(string deString)
+	{
+		byte[] byteString = Encoding.ASCII.GetBytes (deString);
+		for (int i = 0; i < byteString.Length; i++)
+		{
+			if (byteString [i] < 0x40 - 10)
+				byteString [i] += 10;
+			else
+				byteString [i] -= 7;
+		}
+		string result = Encoding.ASCII.GetString (byteString);
+		return result;
 	}
 
 }

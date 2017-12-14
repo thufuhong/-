@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 using UnityEngine.UI;
+using System.Text;
 
 public class Safe_area_sever : MonoBehaviour 
 {
@@ -15,6 +16,11 @@ public class Safe_area_sever : MonoBehaviour
     public GameObject shop;
     public Text ui_text;
     public GameObject Boss_Slider;
+
+    public Avatar axe;
+    public Avatar crystal;
+    public GameObject attack_axe;
+    public GameObject attack_crystal;
 
 	public GameObjectGenerate gameobject_generate;
 	public attribute player_attribute;
@@ -47,8 +53,161 @@ public class Safe_area_sever : MonoBehaviour
     // Use this for initialization
     void Start () 
 	{
-		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "LevelSecond")
-			player_attribute.ReadPlayerAttribute ();
+		
+		
+		/*
+		string testString = "\n\n\n";
+		byte[] byteString = Encoding.UTF8.GetBytes (strTest);
+		byte max = 0, min = 0x7f;
+		*/
+
+		//int temp = 0;
+		//Debug.Log (temp++);
+		//Debug.Log (++temp);
+		/*
+		for (int i = 0; i < testString.Length; i++)
+		{
+			if (testString [i] == '\n')
+				testString [i] = '@';
+			/*
+			if (byteString [i] < min)
+				min = byteString [i];
+			if (byteString [i] == 58)
+				Debug.Log("Fail");
+			Debug.Log (byteString [i]);
+			*/
+		//}
+		/*
+		for (int i = 0; i < byteString.Length; i++)
+		{
+			if (byteString [i] > max)
+				max = byteString [i];
+			if (byteString [i] < min)
+				min = byteString [i];
+			if (byteString [i] == 64)
+				Debug.Log("Fail");
+			//Debug.Log (byteString [i]);
+		}
+		Debug.Log ("max:" + max.ToString ());
+		Debug.Log ("min:" + min.ToString ());
+		string str1 = player_attribute.Encrypt (strTest);
+		string str2 = player_attribute.Decrypt (str1);
+		Debug.Log (strTest);
+		Debug.Log (str1);
+		Debug.Log (str2);
+		*/
+		//player_attribute.DecryptDES (player_attribute.EncryptDES (testString, player_attribute.Key), player_attribute.Key);
+
+		//read the attribute of player
+		//player_attribute.ReadPlayerAttribute ();
+
+
+		//player_attribute.SaveAttributeInFile ();
+		//if (player_attribute.level_num > 1)
+
+		player_attribute.ReadPlayerAttribute ();
+
+		//player_attribute.SaveAttributeInFile ();
+		/*
+		if (player_attribute.level_num == 1)
+			player_attribute.SaveAttributeInFile (1);
+		if (player_attribute.level_num == 2)
+			player_attribute.SaveAttributeInFile (2);
+		if (player_attribute.level_num == 3)
+			player_attribute.SaveAttributeInFile (3);
+
+*/
+		Debug.Log (player_attribute.level_num);
+
+		/*
+		Debug.Log (player_attribute.GetSaveTimeFromFile ());
+
+		Debug.Log (player_attribute.GetLevelOfGameFromFile ().ToString ());
+		Debug.Log (player_attribute.GetLevelOfPlayerFromFile ().ToString ());
+		Debug.Log (player_attribute.GetGoldOfPlayerFromFile ().ToString ());
+		*/
+		//Debug.Log(player_attribute.GetAttributeFromFile ("gold"));
+		//Debug.Log(player_attribute.GetAttributeFromFile ("Level",0));
+		//Debug.Log(player_attribute.GetAttributeFromFile ("level_num"));
+
+
+
+		//player_attribute.DecryptDES (player_attribute.EncryptDES ("HP_max", player_attribute.Key), player_attribute.Key);
+		Boss.GetComponent<attribute>().Level = player_attribute.level_num;
+		Boss.GetComponent<attribute> ().BossUpdate ();
+        try
+        {
+            int _charac = PlayerPrefs.GetInt("Character");
+            if (_charac == 1)
+            {
+                player.transform.Find("axe_armor").gameObject.SetActive(false);
+                player.transform.Find("axe_base").gameObject.SetActive(false);
+                player.transform.Find("axe_belt").gameObject.SetActive(false);
+                player.transform.Find("axe_hair").gameObject.SetActive(false);
+                player.transform.Find("root").gameObject.SetActive(false);
+
+                player.transform.Find("crystal_maiden_arms").gameObject.SetActive(true);
+                player.transform.Find("crystal_maiden_back").gameObject.SetActive(true);
+                player.transform.Find("crystal_maiden_base").gameObject.SetActive(true);
+                player.transform.Find("crystal_maiden_head").gameObject.SetActive(true);
+                player.transform.Find("crystal_maiden_shoulder").gameObject.SetActive(true);
+                player.transform.Find("crystal_maiden_shoulder_bow").gameObject.SetActive(true);
+                player.transform.Find("Root_0").gameObject.SetActive(true);
+
+                player.GetComponent<Animator>().avatar = crystal;
+                player.transform.Find("Attack_area").gameObject.SetActive(false);
+                player.GetComponent<ThirdPersonUserControl>().attack_object = attack_crystal;
+                player.GetComponent<attribute>().ZhiYe = "法师";
+				if(player_attribute.IsInit)
+				{
+                	player.GetComponent<attribute>().ATK = 50 * 5;
+                	player.GetComponent<attribute>().DEF = 5 * 5;
+                	player.GetComponent<attribute>().ATKGrowth = 3f * 5f;
+                	player.GetComponent<attribute>().DEFGrowth = 0.2f * 5f;
+                	player.GetComponent<attribute>().HPGrowth = 10f;
+                	player.GetComponent<attribute>().FireRate = 0.8f;
+                	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.2f;
+					player_attribute.AttributeInit();
+					player_attribute.IsInit = false;
+				}
+
+            }
+            if (_charac == 0)
+            {
+                player.transform.Find("axe_armor").gameObject.SetActive(true);
+                player.transform.Find("axe_base").gameObject.SetActive(true);
+                player.transform.Find("axe_belt").gameObject.SetActive(true);
+                player.transform.Find("axe_hair").gameObject.SetActive(true);
+                player.transform.Find("root").gameObject.SetActive(true);
+
+                player.transform.Find("crystal_maiden_arms").gameObject.SetActive(false);
+                player.transform.Find("crystal_maiden_back").gameObject.SetActive(false);
+                player.transform.Find("crystal_maiden_base").gameObject.SetActive(false);
+                player.transform.Find("crystal_maiden_head").gameObject.SetActive(false);
+                player.transform.Find("crystal_maiden_shoulder").gameObject.SetActive(false);
+                player.transform.Find("crystal_maiden_shoulder_bow").gameObject.SetActive(false);
+                player.transform.Find("Root_0").gameObject.SetActive(false);
+
+                player.GetComponent<Animator>().avatar = axe;
+                player.transform.Find("Attack_area").gameObject.SetActive(true);
+                player.GetComponent<ThirdPersonUserControl>().attack_object = attack_axe;
+                player.GetComponent<attribute>().ZhiYe = "战士";
+				if(player_attribute.IsInit)
+				{
+					player.GetComponent<attribute>().ATK = 30 * 5;
+                	player.GetComponent<attribute>().DEF = 10 * 5;
+                	player.GetComponent<attribute>().ATKGrowth = 1.5f * 5f;
+                	player.GetComponent<attribute>().DEFGrowth = 1f * 5f;
+                	player.GetComponent<attribute>().HPGrowth = 20f;
+                	player.GetComponent<attribute>().FireRate = 0.6f;
+                	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.5f;
+					player_attribute.AttributeInit();
+					player_attribute.IsInit = false;
+				}
+
+            }
+        }
+        catch { }
 
         quad1.transform.position = new Vector3(0f, 0.02f, map_scale_z / 2);
         quad2.transform.position = new Vector3(map_scale_x / 2, 0.02f, 0f);
@@ -99,7 +258,7 @@ public class Safe_area_sever : MonoBehaviour
 				Vector3 t = new Vector3(SafeCenter.x,3.9f,SafeCenter.z);
 				while (gameobject_generate.IsCoincide (new GameObjectGenerate.GameObjectNode (t.x, t.y, t.z, boss_length, boss_width, 0)))
 				{
-					t = t + new Vector3 (UnityEngine.Random.Range (-2f * boss_length, 2f * boss_length), 0, UnityEngine.Random.Range (-2f * boss_width, 2f * boss_width));
+					t = t + new Vector3 (UnityEngine.Random.Range (-4f * boss_length, 4f * boss_length), 0, UnityEngine.Random.Range (-4f * boss_width, 4f * boss_width));
 				}
 				Boss.transform.position = t;
 
@@ -134,10 +293,10 @@ public class Safe_area_sever : MonoBehaviour
             player.GetComponent<attribute>().update_HP(player.GetComponent<attribute>().HP_max);
             shop.transform.position = Boss.transform.position;
             shop.SetActive(true);
+
             //event when success
 
-			player_attribute.SavePlayerAttribute();
-			//UnityEngine.SceneManagement.SceneManager.LoadScene("LevelSecond");
+			//player_attribute.SavePlayerAttribute();
 
             return;
         }
