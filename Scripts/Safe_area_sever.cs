@@ -54,15 +54,16 @@ public class Safe_area_sever : MonoBehaviour
     void Start () 
 	{
 		
-		string strTest = "HP_max 1260\nBallisticSpeed 10\nBallisticDamage -34\nFireRate 0.6\nMP_max 680\nEXPmax 400\nLevel 59\nATKGrowth 7.5\nDEFGrowth 5\nHPGrowth 20\nMPGrowth 10\nEXPForLevelUp 1000\ngold 898\nDropGold 100\nteam 600\nHP 1260\nMP 100\nATK 578.75\nDEF 332.8571\nForceBackPower 1\nForceBackCounterMax 10\nForceBackCounter -1\nskillUp_Num 16\nSkill_Level0 1\nSkill_Level1 18\nSkill_Level2 2\nSkill_Level3 21\nlevel_num 13\nsave_time 12/13/2017 6:49:15 PM";
-
+		
+		/*
 		string testString = "\n\n\n";
 		byte[] byteString = Encoding.UTF8.GetBytes (strTest);
 		byte max = 0, min = 0x7f;
+		*/
 
-		int temp = 0;
-		Debug.Log (temp++);
-		Debug.Log (++temp);
+		//int temp = 0;
+		//Debug.Log (temp++);
+		//Debug.Log (++temp);
 		/*
 		for (int i = 0; i < testString.Length; i++)
 		{
@@ -98,28 +99,42 @@ public class Safe_area_sever : MonoBehaviour
 		//player_attribute.DecryptDES (player_attribute.EncryptDES (testString, player_attribute.Key), player_attribute.Key);
 
 		//read the attribute of player
+		//player_attribute.ReadPlayerAttribute ();
+
+
+		//player_attribute.SaveAttributeInFile ();
+		//if (player_attribute.level_num > 1)
+
 		player_attribute.ReadPlayerAttribute ();
 
+		//player_attribute.SaveAttributeInFile ();
+		/*
+		if (player_attribute.level_num == 1)
+			player_attribute.SaveAttributeInFile (1);
+		if (player_attribute.level_num == 2)
+			player_attribute.SaveAttributeInFile (2);
+		if (player_attribute.level_num == 3)
+			player_attribute.SaveAttributeInFile (3);
 
-		player_attribute.SaveAttributeInFile ();
+*/
+		Debug.Log (player_attribute.level_num);
 
-		player_attribute.ReadAttributeFromFile ();
-
-		player_attribute.SaveAttributeInFile ();
-
+		/*
 		Debug.Log (player_attribute.GetSaveTimeFromFile ());
 
-		Debug.Log (player_attribute.GetLevelOfPlayerFromFile ().ToString ());
 		Debug.Log (player_attribute.GetLevelOfGameFromFile ().ToString ());
+		Debug.Log (player_attribute.GetLevelOfPlayerFromFile ().ToString ());
 		Debug.Log (player_attribute.GetGoldOfPlayerFromFile ().ToString ());
-		Debug.Log(player_attribute.GetAttributeFromFile ("gold"));
-		Debug.Log(player_attribute.GetAttributeFromFile ("Level",0));
-		Debug.Log(player_attribute.GetAttributeFromFile ("level_num"));
+		*/
+		//Debug.Log(player_attribute.GetAttributeFromFile ("gold"));
+		//Debug.Log(player_attribute.GetAttributeFromFile ("Level",0));
+		//Debug.Log(player_attribute.GetAttributeFromFile ("level_num"));
 
 
 
 		//player_attribute.DecryptDES (player_attribute.EncryptDES ("HP_max", player_attribute.Key), player_attribute.Key);
-
+		Boss.GetComponent<attribute>().Level = player_attribute.level_num;
+		Boss.GetComponent<attribute> ().BossUpdate ();
         try
         {
             int _charac = PlayerPrefs.GetInt("Character");
@@ -143,7 +158,7 @@ public class Safe_area_sever : MonoBehaviour
                 player.transform.Find("Attack_area").gameObject.SetActive(false);
                 player.GetComponent<ThirdPersonUserControl>().attack_object = attack_crystal;
                 player.GetComponent<attribute>().ZhiYe = "法师";
-				if(player_attribute.level_num == 1)
+				if(player_attribute.IsInit)
 				{
                 	player.GetComponent<attribute>().ATK = 50 * 5;
                 	player.GetComponent<attribute>().DEF = 5 * 5;
@@ -153,6 +168,7 @@ public class Safe_area_sever : MonoBehaviour
                 	player.GetComponent<attribute>().FireRate = 0.8f;
                 	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.2f;
 					player_attribute.AttributeInit();
+					player_attribute.IsInit = false;
 				}
 
             }
@@ -176,7 +192,7 @@ public class Safe_area_sever : MonoBehaviour
                 player.transform.Find("Attack_area").gameObject.SetActive(true);
                 player.GetComponent<ThirdPersonUserControl>().attack_object = attack_axe;
                 player.GetComponent<attribute>().ZhiYe = "战士";
-				if(player_attribute.level_num == 1)
+				if(player_attribute.IsInit)
 				{
 					player.GetComponent<attribute>().ATK = 30 * 5;
                 	player.GetComponent<attribute>().DEF = 10 * 5;
@@ -186,6 +202,7 @@ public class Safe_area_sever : MonoBehaviour
                 	player.GetComponent<attribute>().FireRate = 0.6f;
                 	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.5f;
 					player_attribute.AttributeInit();
+					player_attribute.IsInit = false;
 				}
 
             }
