@@ -107,7 +107,7 @@ public class GameObjectGenerate : MonoBehaviour
 		Debug.Log (GameObjectList.Count.ToString() + "\t");
 		while (current != null)
 		{
-			//Debug.Log (current.Value.x.ToString () + "\t" + current.Value.z.ToString ());
+			Debug.Log (current.Value.x.ToString () + "\t" + current.Value.z.ToString ());
 			current = current.Next;
 		}
 	}
@@ -122,12 +122,15 @@ public class GameObjectGenerate : MonoBehaviour
 		for (int j = 0; j < 3; j++)
 		{
 			GenetateEnemy (60);
-			GenetateHP (30);
-			GenerateTree (2);
+			GenetateHP (10);
+            GenetateCoins(15);
+
+            GenerateTree (2);
 			GenerateRockHill (3);
 			GenerateMoutain (3);
 		}
 
+		/*
 		{
 			//test of the LinkedList,you can ignore it
 
@@ -160,6 +163,7 @@ public class GameObjectGenerate : MonoBehaviour
 
 			ListPrint ();
 		}
+		*/
 
 		//
 		transform.Find ("/Canvas").gameObject.GetComponent<EnterWindow> ().InitFunction ();
@@ -174,6 +178,7 @@ public class GameObjectGenerate : MonoBehaviour
 	//generate count enemys
 	void GenetateEnemy(int count)
 	{
+		int game_level = player.GetComponent<attribute> ().level_num;
 		Vector3 t;
 		for (int i = 0; i < count; i++)
 		{
@@ -189,6 +194,18 @@ public class GameObjectGenerate : MonoBehaviour
 			}
 			GameObject temp_enemy = Instantiate (enemy, t, new Quaternion ());
 			temp_enemy.GetComponent<AICharacterControl> ().target = player.transform;
+			temp_enemy.GetComponent<attribute> ().Level = game_level;
+			temp_enemy.GetComponent<attribute> ().EnemyUpdate ();
+
+			/*
+			temp_enemy.GetComponent<attribute> ().ATK = 20f * game_level + 5f;
+			temp_enemy.GetComponent<attribute> ().DEF = 10f * game_level + 5f;
+			temp_enemy.GetComponent<attribute> ().HP = temp_enemy.GetComponent<attribute> ().HP_max = 100f * game_level + 30f;
+			temp_enemy.GetComponent<attribute> ().DropGold = 10f * game_level + 10f;
+			temp_enemy.GetComponent<attribute> ().DropEXP = 300f * game_level + 200f;
+			temp_enemy.GetComponent<attribute> ().FireRate = 0.2f * game_level + 1f;
+			*/
+
 			GameObject temp_range = Instantiate (enemy_attack_area, t, new Quaternion ());
 			temp_range.GetComponent<attack_range> ().Target = temp_enemy;
 		}
@@ -215,9 +232,28 @@ public class GameObjectGenerate : MonoBehaviour
 		}
 	}
 
+    void GenetateCoins(int count)
+    {
+        Vector3 t;
+        for (int i = 0; i < count; i++)
+        {
+            while (true)
+            {
+                t = new Vector3(UnityEngine.Random.Range(edge_width, map_x - edge_width),
+                    1f, UnityEngine.Random.Range(edge_width, map_x - edge_width));
+                if (!IsCoincide(new GameObjectNode(t.x, t.y, t.z, HP_length, HP_width, 0)))
+                {
+                    GameObjectList.AddLast(new GameObjectNode(t.x, t.y, t.z, HP_length, HP_width, 0));
+                    break;
+                }
+            }
+            GameObject temp_HP = Instantiate(itemCoin, t, Quaternion.Euler(-90, 0, 0));
+            temp_HP.GetComponent<pickGoods>().value = (int)UnityEngine.Random.Range(10, 50);
+        }
+    }
 
-	//it will generate 2*3*count trees
-	void GenerateTree(int count)
+    //it will generate 2*3*count trees
+    void GenerateTree(int count)
 	{
 		GameObject[] tree = new GameObject[3];
 		GameObject[] temp_tree = new GameObject[3];
