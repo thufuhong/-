@@ -55,7 +55,7 @@ public class attribute : MonoBehaviour
 
 	public int level_num = 1;
 	public string save_time;
-
+	public bool IsInit = false;
     
 
     public float update_HP(float value)
@@ -226,7 +226,10 @@ public class attribute : MonoBehaviour
 
 		PlayerPrefs.SetInt ("level_num", level_num);
 
-
+		if(IsInit)
+			PlayerPrefs.SetInt ("IsInit", 1);
+		else
+			PlayerPrefs.SetInt ("IsInit", 0);
 
 	}
 
@@ -246,7 +249,8 @@ public class attribute : MonoBehaviour
 		EXPForLevelUp = PlayerPrefs.GetFloat ("EXPForLevelUp", 1000);
 		gold = PlayerPrefs.GetFloat ("gold", 0);
 		DropGold = PlayerPrefs.GetFloat ("DropGold", 100);
-		team = PlayerPrefs.GetFloat ("team", 600);
+		team = PlayerPrefs.GetFloat ("team", 0);
+
 
 		ifAlive = true;
 		if_Player = true;
@@ -268,21 +272,37 @@ public class attribute : MonoBehaviour
 		Skill_Level[2] = PlayerPrefs.GetFloat ("Skill_Level2", 0);
 		Skill_Level[3] = PlayerPrefs.GetFloat ("Skill_Level3", 0);
 
+
+
 		level_num = PlayerPrefs.GetInt ("level_num", 1);
 
+		if (PlayerPrefs.GetInt ("IsInit", 1) == 1)
+			IsInit = true;
+		else
+			IsInit = false;
 
-
-		ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
-		ui_HP.value = Mathf.Max(HP, 0) / HP_max;
+		//ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
+		//ui_HP.value = Mathf.Max(HP, 0) / HP_max;
 	}
 
 	public void EnemyUpdate()
 	{
-		HP = HP_max = level_num * 50f;
-		ATK = level_num * 10;
-		DEF = level_num * 5;
-		DropGold = level_num * 300;
-		DropEXP = level_num * 50;
+		HP = HP_max = 100f * Level + 30f;
+		ATK = 20f * Level + 5f;
+		DEF = 10f * Level + 5f;
+		DropGold = 10f * Level + 10f;
+		DropEXP = 200f * Level + 200f;
+		FireRate = 0.2f * Level + 1f;
+	}
+
+	public void BossUpdate()
+	{
+		HP = HP_max = 1000f * Level + 200f;
+		ATK = 20f * Level + 5f;
+		DEF = 10f * Level + 5f;
+		DropGold = 100f * Level + 10f;
+		DropEXP = 600f * Level + 100f;
+		FireRate = 0.2f * Level + 1f;
 	}
 
 	private void PrintAttribute()
@@ -503,8 +523,8 @@ public class attribute : MonoBehaviour
 			ForceBackDerection = new Vector3 (0, 0, 0);
 		}
 		fs.Close ();
-		ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
-		ui_HP.value = Mathf.Max(HP, 0) / HP_max;
+		//ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
+		//ui_HP.value = Mathf.Max(HP, 0) / HP_max;
 	}
 
 	//method to get the attribute from file
