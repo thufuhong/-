@@ -11,6 +11,7 @@ public class shop : MonoBehaviour {
 
     public bool isPlayerNearBy = false;
     private bool shopOpened = false;
+	private bool next_level = false;
 
     // Use this for initialization
     void Start () {
@@ -45,10 +46,14 @@ public class shop : MonoBehaviour {
                 shopOpened = true;
                 //Put SHOP code here
             }
-			if (Input.GetKeyDown (KeyCode.N))
+
+			if (Input.GetKeyDown (KeyCode.N) && !next_level)
 			{
 				//next level
+				next_level = true;
+				Debug.Log(player_attribute.level_num);
 				player_attribute.level_num++;
+				Debug.Log(player_attribute.level_num);
 				player_attribute.SavePlayerAttribute ();
 				player_attribute.SaveAttributeInFile ();
 				UnityEngine.SceneManagement.SceneManager.LoadScene ("LevelFirst");
