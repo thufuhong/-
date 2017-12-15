@@ -13,7 +13,7 @@ public class Boss : MonoBehaviour {
             GameObject player = colli.transform.parent.gameObject;
             float damage = player.GetComponent<ThirdPersonUserControl>().Skill_4_Value[0] + player.GetComponent<ThirdPersonUserControl>().Skill_4_Value[3] * player.GetComponent<attribute>().Skill_Level[3];
             float _t = this.gameObject.GetComponent<attribute>().HP;
-            float _c = this.gameObject.GetComponent<attribute>().update_HP(Mathf.Min(-damage + this.gameObject.GetComponent<attribute>().DEF, 0));
+            float _c = this.gameObject.GetComponent<attribute>().update_HP(Mathf.Min(-damage + this.gameObject.GetComponent<attribute>().DEF+ this.gameObject.GetComponent<attribute>().DEF_bouns, 0));
             if (_t >=0 && _c <= 0)
             {
                 player.GetComponent<attribute>().update_EXP(this.gameObject.GetComponent<attribute>().DropEXP);

@@ -138,9 +138,17 @@ public class bagManager : MonoBehaviour {
                 player.gold -= ShopPrice[3];
                 float _rand1 = Random.Range(0f, 1f);
                 float _rand2 = Random.Range(0f, 1f);
-                int _kind1 = _rand1 < 0.4f ? 0 : _rand1 < 0.7f ? 1 : 2; //Probality of hp/atk/def ... 0.4/0.3/0.3
+                int _kind1 = _rand1 < 0.28f ? 0 : _rand1 < 0.49f ? 1 : _rand1 < 0.7f ? 2 : _rand1 < 0.85f ? 3 : 4; //Probality of hp/atk/def/Attribute_atk/Attribute_def ... 0.28/0.21/0.21/0.15/0.15
                 int _kind2 = _rand2 < 0.5f ? 0 : _rand2 < 0.8f ? 1 : _rand2 < 0.95f ? 2 : 3; //Probality of white/green/blue/red ... 0.5/0.3/0.15/0.05
-                ItemOwned[4 * _kind1 + _kind2]++;
+                if (_kind1<3)
+                    ItemOwned[4 * _kind1 + _kind2]++;
+                else
+                {
+                    if (_kind1 == 3)
+                        player.ATK += _kind2 == 0 ? 3 : _kind2 == 1 ? 6 : _kind2 == 2 ? 9 : 15;
+                    if (_kind1 == 4)
+                        player.DEF += _kind2 == 0 ? 3 : _kind2 == 1 ? 6 : _kind2 == 2 ? 9 : 15;
+                }
                 LotterySingle.GetComponent<Lottery1>().itemid = _kind1;
                 LotterySingle.GetComponent<Lottery1>().ItemLevel = 3 - _kind2;
                 LotterySingle.SetActive(true);
@@ -157,9 +165,17 @@ public class bagManager : MonoBehaviour {
 
                 float _rand1 = Random.Range(0f, 1f);
                 float _rand2 = 1.0f; //十连必爆红色品质
-                int _kind1 = _rand1 < 0.4f ? 0 : _rand1 < 0.7f ? 1 : 2; //Probality of hp/atk/def ... 0.4/0.3/0.3
+                int _kind1 = _rand1 < 0.28f ? 0 : _rand1 < 0.49f ? 1 : _rand1 < 0.7f ? 2 : _rand1 < 0.85f ? 3 : 4; //Probality of hp/atk/def/Attribute_atk/Attribute_def ... 0.28/0.21/0.21/0.15/0.15
                 int _kind2 = _rand2 < 0.5f ? 0 : _rand2 < 0.8f ? 1 : _rand2 < 0.95f ? 2 : 3; //Probality of white/green/blue/red ... 0.5/0.3/0.15/0.05
-                ItemOwned[4 * _kind1 + _kind2]++;
+                if (_kind1 < 3)
+                    ItemOwned[4 * _kind1 + _kind2]++;
+                else
+                {
+                    if (_kind1 == 3)
+                        player.ATK += _kind2 == 0 ? 3 : _kind2 == 1 ? 6 : _kind2 == 2 ? 9 : 15;
+                    if (_kind1 == 4)
+                        player.DEF += _kind2 == 0 ? 3 : _kind2 == 1 ? 6 : _kind2 == 2 ? 9 : 15;
+                }
                 Lottery10.GetComponent<Lottery10>().itemid[0] = _kind1;
                 Lottery10.GetComponent<Lottery10>().ItemLevel[0] = 3 - _kind2;
 
@@ -167,9 +183,17 @@ public class bagManager : MonoBehaviour {
                 {
                     _rand1 = Random.Range(0f, 1f);
                     _rand2 = Random.Range(0f, 1f);
-                    _kind1 = _rand1 < 0.4f ? 0 : _rand1 < 0.7f ? 1 : 2; //Probality of hp/atk/def ... 0.4/0.3/0.3
+                    _kind1 = _rand1 < 0.28f ? 0 : _rand1 < 0.49f ? 1 : _rand1 < 0.7f ? 2 : _rand1 < 0.85f ? 3 : 4; //Probality of hp/atk/def/Attribute_atk/Attribute_def ... 0.28/0.21/0.21/0.15/0.15
                     _kind2 = _rand2 < 0.5f ? 0 : _rand2 < 0.8f ? 1 : _rand2 < 0.95f ? 2 : 3; //Probality of white/green/blue/red ... 0.5/0.3/0.15/0.05
-                    ItemOwned[4 * _kind1 + _kind2]++;
+                    if (_kind1 < 3)
+                        ItemOwned[4 * _kind1 + _kind2]++;
+                    else
+                    {
+                        if (_kind1 == 3)
+                            player.ATK += _kind2 == 0 ? 3 : _kind2 == 1 ? 6 : _kind2 == 2 ? 9 : 15;
+                        if (_kind1 == 4)
+                            player.DEF += _kind2 == 0 ? 3 : _kind2 == 1 ? 6 : _kind2 == 2 ? 9 : 15;
+                    }
                     Lottery10.GetComponent<Lottery10>().itemid[i] = _kind1;
                     Lottery10.GetComponent<Lottery10>().ItemLevel[i] = 3 - _kind2;
                 }

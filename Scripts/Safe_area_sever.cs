@@ -16,6 +16,9 @@ public class Safe_area_sever : MonoBehaviour
     public GameObject shop;
     public Text ui_text;
     public GameObject Boss_Slider;
+    public GameObject TimerUI;
+    public Sprite TimerUI_red;
+    public Sprite TimerUI_blue;
 
     public Avatar axe;
     public Avatar crystal;
@@ -24,10 +27,12 @@ public class Safe_area_sever : MonoBehaviour
 
 	public GameObjectGenerate gameobject_generate;
 	public attribute player_attribute;
+    
 
     public float map_scale_x = 500;
     public float map_scale_z = 500;
-    public float wait_time = 5f;
+    public float Base_wait_time = 3f;
+    public float Additional_wait_time = 20f;
     public float Base_transfer_time = 10f;
     public float Additional_transfer_time = 50f;
     public float TotalRounds = 3;
@@ -49,6 +54,7 @@ public class Safe_area_sever : MonoBehaviour
 
 	private float boss_length = 2.2f;
 	private float boss_width = 2.2f;
+    private float Timer_max;
 
     // Use this for initialization
     void Start () 
@@ -157,13 +163,13 @@ public class Safe_area_sever : MonoBehaviour
                 player.GetComponent<Animator>().avatar = crystal;
                 player.transform.Find("Attack_area").gameObject.SetActive(false);
                 player.GetComponent<ThirdPersonUserControl>().attack_object = attack_crystal;
-                player.GetComponent<attribute>().ZhiYe = "法师";
+                player.GetComponent<attribute>().ZhiYe = "wizard";
 				if(player_attribute.IsInit)
 				{
-                	player.GetComponent<attribute>().ATK = 50 * 5;
-                	player.GetComponent<attribute>().DEF = 5 * 5;
-                	player.GetComponent<attribute>().ATKGrowth = 3f * 5f;
-                	player.GetComponent<attribute>().DEFGrowth = 0.2f * 5f;
+                	player.GetComponent<attribute>().ATK = 70 ;
+                	player.GetComponent<attribute>().DEF = 5 ;
+                	player.GetComponent<attribute>().ATKGrowth = 3f ;
+                	player.GetComponent<attribute>().DEFGrowth = 0.2f ;
                 	player.GetComponent<attribute>().HPGrowth = 10f;
                 	player.GetComponent<attribute>().FireRate = 0.8f;
                 	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.2f;
@@ -191,13 +197,13 @@ public class Safe_area_sever : MonoBehaviour
                 player.GetComponent<Animator>().avatar = axe;
                 player.transform.Find("Attack_area").gameObject.SetActive(true);
                 player.GetComponent<ThirdPersonUserControl>().attack_object = attack_axe;
-                player.GetComponent<attribute>().ZhiYe = "战士";
+                player.GetComponent<attribute>().ZhiYe = "warrior";
 				if(player_attribute.IsInit)
 				{
-					player.GetComponent<attribute>().ATK = 30 * 5;
-                	player.GetComponent<attribute>().DEF = 10 * 5;
-                	player.GetComponent<attribute>().ATKGrowth = 1.5f * 5f;
-                	player.GetComponent<attribute>().DEFGrowth = 1f * 5f;
+					player.GetComponent<attribute>().ATK = 50 ;
+                	player.GetComponent<attribute>().DEF = 10 ;
+                	player.GetComponent<attribute>().ATKGrowth = 1.5f ;
+                	player.GetComponent<attribute>().DEFGrowth = 1f ;
                 	player.GetComponent<attribute>().HPGrowth = 20f;
                 	player.GetComponent<attribute>().FireRate = 0.6f;
                 	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.5f;
@@ -238,7 +244,15 @@ public class Safe_area_sever : MonoBehaviour
                 player.transform.position.x > 2 * quad3.transform.position.x - map_scale_x ||
                 player.transform.position.z < 2 * quad2.transform.position.z ||
                 player.transform.position.z > 2 * quad4.transform.position.z - map_scale_z)
+        {
+            player.GetComponent<ThirdPersonUserControl>().StateIcon.transform.Find("Unsafe").gameObject.GetComponent<Image>().fillAmount = 1.0f;
             player.GetComponent<attribute>().update_HP(-DamagePerSecond * Time.deltaTime);
+        }
+        else
+        {
+            player.GetComponent<ThirdPersonUserControl>().StateIcon.transform.Find("Unsafe").gameObject.GetComponent<Image>().fillAmount = 0.0f;
+        }
+            
         if (timer > 0)
             timer -= Time.fixedDeltaTime;
         if (boss_transition_timer > 0)
@@ -317,20 +331,28 @@ public class Safe_area_sever : MonoBehaviour
                     DeltaQuad2 = (SafeCenter.z - 2 * quad2.transform.position.z) / _totalframes / scale_factor;
                     DeltaQuad3 = (2 * quad3.transform.position.x - map_scale_x - SafeCenter.x) / _totalframes / scale_factor;
                     DeltaQuad4 = (2 * quad4.transform.position.z - map_scale_z - SafeCenter.z) / _totalframes / scale_factor;
-                    timer = wait_time;
+                    timer = Base_wait_time+ Additional_wait_time/rounds;
+                    Timer_max = Base_wait_time + Additional_wait_time / rounds;
                     IsWaiting = true;
-
+                    TimerUI.transform.Find("StateBackground").gameObject.GetComponent<Image>().sprite = TimerUI_blue;
+                    TimerUI.transform.Find("State").gameObject.GetComponent<Text>().text = "WAITING";
                     // Transition of Boss
                     boss_transition_timer = 6f;
                 }
                 else
                 {
                     timer = (Base_transfer_time + Additional_transfer_time / rounds);
+                    Timer_max = (Base_transfer_time + Additional_transfer_time / rounds);
                     IsWaiting = false;
+                    TimerUI.transform.Find("StateBackground").gameObject.GetComponent<Image>().sprite = TimerUI_red;
+                    TimerUI.transform.Find("State").gameObject.GetComponent<Text>().text = "REDUCING";
                 }
             }
             // TBD: else here?
-            ui_text.text = (IsWaiting ? "Safe Area Will Reduce in " : "Safe Area Reductin Ends in ") + ((int)timer + 1).ToString();
+            
+            TimerUI.GetComponent<Slider>().value = timer / Timer_max;
+            TimerUI.transform.Find("Fill Area").Find("Fill").gameObject.GetComponent<Image>().color = new Color(1 - timer / Timer_max, timer / Timer_max, 0);
+            TimerUI.transform.Find("Handle Slide Area").Find("Handle").Find("Time").gameObject.GetComponent<Text>().text = ((int)timer + 1).ToString();
             if (!IsWaiting)
             {
                 quad1.transform.position = quad1.transform.position + new Vector3(DeltaQuad1/2, 0f, 0f);
