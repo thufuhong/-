@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,8 +23,7 @@ public class DieWindow : MonoBehaviour {
         if(Fuwang.GetComponent<attribute>().gold>=1000)
         {
             Fuwang.GetComponent<attribute>().gold -= 1000;
-            //Fuwang.GetComponent<attribute>().update_HP(999999f);
-		Fuwang.GetComponent<attribute>().HP = Fuwang.GetComponent<attribute>().HP_max;
+            Fuwang.GetComponent<attribute>().HP = Fuwang.GetComponent<attribute>().HP_max;
             Fuwang.GetComponent<attribute>().ifAlive = true;
             Fuwang.GetComponent<Animator>().SetTrigger("reborn");
             this.gameObject.SetActive(false);
