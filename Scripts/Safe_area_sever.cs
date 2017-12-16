@@ -167,12 +167,12 @@ public class Safe_area_sever : MonoBehaviour
 				if(player_attribute.IsInit)
 				{
                 	player.GetComponent<attribute>().ATK = 70 ;
-                	player.GetComponent<attribute>().DEF = 5 ;
-                	player.GetComponent<attribute>().ATKGrowth = 3f ;
-                	player.GetComponent<attribute>().DEFGrowth = 0.2f ;
-                	player.GetComponent<attribute>().HPGrowth = 10f;
+                	player.GetComponent<attribute>().DEF = 10 ;
+                	player.GetComponent<attribute>().ATKGrowth = 7f ;
+                	player.GetComponent<attribute>().DEFGrowth = 1f ;
+                	player.GetComponent<attribute>().HPGrowth = 8f;
                 	player.GetComponent<attribute>().FireRate = 0.8f;
-                	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.2f;
+                	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.5f;
 					player_attribute.AttributeInit();
 					player_attribute.IsInit = false;
 				}
@@ -201,10 +201,10 @@ public class Safe_area_sever : MonoBehaviour
 				if(player_attribute.IsInit)
 				{
 					player.GetComponent<attribute>().ATK = 50 ;
-                	player.GetComponent<attribute>().DEF = 10 ;
-                	player.GetComponent<attribute>().ATKGrowth = 1.5f ;
-                	player.GetComponent<attribute>().DEFGrowth = 1f ;
-                	player.GetComponent<attribute>().HPGrowth = 20f;
+                	player.GetComponent<attribute>().DEF = 30 ;
+                	player.GetComponent<attribute>().ATKGrowth = 5f ;
+                	player.GetComponent<attribute>().DEFGrowth = 3f ;
+                	player.GetComponent<attribute>().HPGrowth = 10f;
                 	player.GetComponent<attribute>().FireRate = 0.6f;
                 	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.5f;
 					player_attribute.AttributeInit();
