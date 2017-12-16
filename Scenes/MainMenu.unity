@@ -1827,7 +1827,7 @@ MonoBehaviour:
   HPGrowth: 20
   MPGrowth: 10
   EXPForLevelUp: 1000
-  gold: 0
+  gold: 2000
   DropGold: 100
   DropEXP: 600
   Skill_Level:
@@ -1845,6 +1845,7 @@ MonoBehaviour:
   DieWindow: {fileID: 0}
   ParticalLevelUp: {fileID: 0}
   bag: {fileID: 446102150}
+  safe_area_sever: {fileID: 0}
   HP: 0
   MP: 0
   ATK: 20
@@ -4463,7 +4464,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1257903760}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 464, y: 309, z: 0}
+  m_LocalPosition: {x: 453, y: 333.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1165365813}
