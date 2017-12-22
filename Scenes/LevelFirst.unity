@@ -17189,17 +17189,17 @@ Prefab:
     - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
         type: 2}
       propertyPath: Skill_4_Value.Array.data[3]
-      value: 10
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
         type: 2}
       propertyPath: Skill_4_Value.Array.data[4]
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
         type: 2}
       propertyPath: Skill_4_Value.Array.data[5]
-      value: 0.25
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
         type: 2}
@@ -17393,6 +17393,76 @@ Prefab:
       propertyPath: boss
       value: 
       objectReference: {fileID: 1839753569}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_4_Value.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_2_Duration
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_2_Value.Array.data[0]
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_2_Value.Array.data[2]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_2_Value.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_2_Value.Array.data[3]
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_1_Value.Array.data[3]
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_1_Value.Array.data[1]
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_1_Value.Array.data[0]
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_1_Duration
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_1_Value.Array.data[4]
+      value: 0.025
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_3_Duration
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_1_Value.Array.data[5]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114948389043309000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf,
+        type: 2}
+      propertyPath: Skill_3_Value.Array.data[0]
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b604e8cd9ce8e6f44a0ddfbfe0bdb5cf, type: 2}
   m_IsPrefabParent: 0

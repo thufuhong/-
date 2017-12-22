@@ -313,12 +313,13 @@ public class attribute : MonoBehaviour
 		//ui_HP.value = Mathf.Max(HP, 0) / HP_max;
 	}
 
+    // 玩家每回合大致获得80点总属性，怪物每回合获得90点属性
 	public void EnemyUpdate()
 	{
-		HP = HP_max = 100f * Level + 30f;
-		ATK = 20f * Level + 5f;
-		DEF = 10f * Level + 5f;
-		DropGold = 10f * Level + 10f;
+		HP = HP_max = 120f * Level + 30f;
+		ATK = 55f * Level - 10f;
+		DEF = 35f * Level - 10f;
+		DropGold = 20f * Level + 10f;
         //DropEXP = 200f * Level + 200f;
         DropEXP = 400f;
         FireRate = 0.5f / Level + 0.5f;
@@ -327,13 +328,13 @@ public class attribute : MonoBehaviour
 	public void BossUpdate()
 	{
 		HP = HP_max = 1000f * Level + 200f;
-		ATK = 20f * Level + 5f;
-		DEF = 10f * Level + 5f;
-		DropGold = 100f * Level + 10f;
-		DropEXP = 600f * Level + 100f;
-		FireRate = 0.2f * Level + 1f;
-        safe_area_sever.GetComponent<Safe_area_sever>().DamagePerSecond = Mathf.Pow(2f, Level - 1) + 2f;
-        Debug.Log("Update Success.");
+		ATK = 55f * Level + 5f;
+		DEF = 35f * Level - 5f;
+		DropGold = 300f * Level + 10f;
+        //DropEXP = 600f * Level + 100f;
+        DropEXP = 1000f;
+
+        safe_area_sever.GetComponent<Safe_area_sever>().DamagePerSecond = 2f*Level + 2f;
 	}
 
 	private void PrintAttribute()
@@ -359,7 +360,7 @@ public class attribute : MonoBehaviour
 		//HPGrowth = PlayerPrefs.GetFloat ("HPGrowth", 20);
 		//MPGrowth = PlayerPrefs.GetFloat ("MPGrowth", 10);
 		EXPForLevelUp = 1000;
-		gold = 0;
+		gold = 1500;
 		DropGold = 100;
 		team = 600;
 

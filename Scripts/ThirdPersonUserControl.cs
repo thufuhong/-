@@ -31,7 +31,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         public GameObject Skill_3_Icon;
         public float Skill_4_CoolDownTime_Max = 10.0f;
         public float Skill_4_Duration = 5.0f;
-        public float[] Skill_4_Value = { 30, 10, 1, 10, 5, 0.25f };
+        public float[] Skill_4_Value = { 1.0f, 10, 1, 0.02f, 1, 0.07f };
         public GameObject Skill_4_Icon;
         public float ATKTime_max = 20.0f;
         public float DEFTime_max = 20.0f;
@@ -103,7 +103,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                         list[i].materials[0].color = Color.white;
                     }
                     _attr.ATK_bouns -= _attr.ATK * (Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0] - 1);
-                    _attr.DEF_bouns -= _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0] - 1);
+                    //_attr.DEF_bouns -= _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0] - 1);
                     //_attr.ATK /= Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0];
                     //_attr.DEF /= Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0];
                     this.gameObject.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier /= Skill_1_Value[2] + Skill_1_Value[5] * _attr.Skill_Level[0];
@@ -126,12 +126,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 Skill_3_CoolDownTime -= Time.fixedDeltaTime;
                 Skill_3_Icon.GetComponent<Image>().fillAmount = Mathf.Max(0, Skill_3_CoolDownTime) / Skill_3_CoolDownTime_Max;
-                StateIcon.transform.Find("Skill3").gameObject.GetComponent<Image>().fillAmount = Mathf.Max(1 - (Skill_3_CoolDownTime_Max - Skill_3_CoolDownTime) / Skill_3_Duration, 0.0f);
+                StateIcon.transform.Find("Skill3").gameObject.GetComponent<Image>().fillAmount = Mathf.Max(1 - (Skill_3_CoolDownTime_Max - Skill_3_CoolDownTime) / (Skill_3_Value[0] + Skill_3_Value[1] * _attr.Skill_Level[2]), 0.0f);
                 if (Skill_3_CoolDownTime_Max - Skill_3_CoolDownTime >= Skill_3_Value[0] + Skill_3_Value[1]*_attr.Skill_Level[2] && Skill_3_active)
                 {
                     Skill_3_active = false;
                     this.gameObject.transform.Find("Skill_3_shelter").gameObject.SetActive(false);
                     Sa.DamagePerSecond = Safe_area_damage_persecond_record;
+                    _attr.DEF_bouns -= _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0] - 1);
                 }
             }
             if (Skill_4_CoolDownTime > 0)
@@ -197,7 +198,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 }
 
                 _attr.ATK_bouns += _attr.ATK * (Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0] - 1);
-                _attr.DEF_bouns += _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0] - 1);
+                //_attr.DEF_bouns += _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0] - 1);
                 //_attr.ATK *= Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0];
                 //_attr.DEF *= Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0]; 
                 this.gameObject.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier *= Skill_1_Value[2] + Skill_1_Value[5] * _attr.Skill_Level[0];
@@ -216,6 +217,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 this.gameObject.transform.Find("Skill_3_shelter").gameObject.SetActive(true);
                 Safe_area_damage_persecond_record = Sa.DamagePerSecond;
                 Sa.DamagePerSecond = 0;
+                _attr.DEF_bouns += _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0] - 1);
             }
             if (state_now == Animator.StringToHash("Grounded") && Input.GetKeyDown(KeyCode.P) && Skill_4_CoolDownTime <= 0 && _attr.Skill_Level[3] > 0)
             {
