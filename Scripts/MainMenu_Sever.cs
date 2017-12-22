@@ -12,6 +12,8 @@ public class MainMenu_Sever : MonoBehaviour {
     public GameObject loadgame;
     public GameObject developer;
 
+	public GameObject loadSprite;
+
     private Vector3 BackgtoundTarget;
     private Vector3 CameraTarget;
     private int _x;
@@ -59,21 +61,36 @@ public class MainMenu_Sever : MonoBehaviour {
 
     void LoadFirstScene()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
+        // UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
+		StartCoroutine(loadScene());
     }
 
 	void LoadArchive(int num)
 	{
 		GetComponent<attribute> ().ReadAttributeFromFile (num);
 		GetComponent<attribute> ().SavePlayerAttribute ();
-		UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
+		// use AsyncOperation Loading
+		// UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
+		LoadFirstScene();
 	}
+
+	IEnumerator loadScene()
+	{
+		AsyncOperation async = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync ("LevelFirst");
+		if (loadSprite != null) 
+		{
+			loadSprite.GetComponent<LoadRotate> ().async = async;
+		}
+		yield return async;
+	}
+
     void LoadArchive2()
     {
         int num = _x;
-        GetComponent<attribute>().ReadAttributeFromFile(num);
-        GetComponent<attribute>().SavePlayerAttribute();
-        UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
+        // GetComponent<attribute>().ReadAttributeFromFile(num);
+        // GetComponent<attribute>().SavePlayerAttribute();
+        // UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
+		LoadArchive(num);
     }
 
     void SaveArchive(int num)
