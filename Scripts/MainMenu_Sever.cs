@@ -33,7 +33,7 @@ public class MainMenu_Sever : MonoBehaviour {
 		GetComponent<attribute> ().SavePlayerAttribute ();
         BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
         CameraTarget = CameraTarget + DeltaCenter;
-        Invoke("LoadFirstScene", 2);
+        Invoke("LoadFirstScene", 1);
     }
     public void ButtonLoad(int x)
     {
@@ -41,7 +41,7 @@ public class MainMenu_Sever : MonoBehaviour {
         loadgame.SetActive(false);
         BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
         CameraTarget = CameraTarget + DeltaCenter;
-        Invoke("LoadArchive2", 2);
+        Invoke("LoadArchive2", 1);
     }
 
     /*
@@ -77,10 +77,7 @@ public class MainMenu_Sever : MonoBehaviour {
 	IEnumerator loadScene()
 	{
 		AsyncOperation async = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync ("LevelFirst");
-		if (loadSprite != null) 
-		{
-			loadSprite.GetComponent<LoadRotate> ().async = async;
-		}
+		loadSprite.GetComponent<LoadRotate> ().async = async;
 		yield return async;
 	}
 
