@@ -22,8 +22,8 @@ public class Script_EscMenu : MonoBehaviour
 	void Update () {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-			player.GetComponent<attribute> ().SavePlayerAttribute ();
-			player.GetComponent<attribute> ().SaveAttributeInFile ();
+			//player.GetComponent<attribute> ().SavePlayerAttribute ();
+			//player.GetComponent<attribute> ().SaveAttributeInFile ();
 			//Debug.Log ("Back Esc Menu");
 			if (EscMenu.active == true) {
                 Button_Backgame();
