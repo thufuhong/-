@@ -24,6 +24,7 @@ public class Safe_area_sever : MonoBehaviour
     public Avatar crystal;
     public GameObject attack_axe;
     public GameObject attack_crystal;
+    public GameObject GameLevelUI;
 
 	public GameObjectGenerate gameobject_generate;
 	public attribute player_attribute;
@@ -124,22 +125,22 @@ public class Safe_area_sever : MonoBehaviour
 
 */
 		Debug.Log (player_attribute.level_num);
-
-		/*
+        GameLevelUI.transform.Find("Text").gameObject.GetComponent<Text>().text = player_attribute.level_num.ToString();
+        /*
 		Debug.Log (player_attribute.GetSaveTimeFromFile ());
 
 		Debug.Log (player_attribute.GetLevelOfGameFromFile ().ToString ());
 		Debug.Log (player_attribute.GetLevelOfPlayerFromFile ().ToString ());
 		Debug.Log (player_attribute.GetGoldOfPlayerFromFile ().ToString ());
 		*/
-		//Debug.Log(player_attribute.GetAttributeFromFile ("gold"));
-		//Debug.Log(player_attribute.GetAttributeFromFile ("Level",0));
-		//Debug.Log(player_attribute.GetAttributeFromFile ("level_num"));
+        //Debug.Log(player_attribute.GetAttributeFromFile ("gold"));
+        //Debug.Log(player_attribute.GetAttributeFromFile ("Level",0));
+        //Debug.Log(player_attribute.GetAttributeFromFile ("level_num"));
 
 
 
-		//player_attribute.DecryptDES (player_attribute.EncryptDES ("HP_max", player_attribute.Key), player_attribute.Key);
-		Boss.GetComponent<attribute>().Level = player_attribute.level_num;
+        //player_attribute.DecryptDES (player_attribute.EncryptDES ("HP_max", player_attribute.Key), player_attribute.Key);
+        Boss.GetComponent<attribute>().Level = player_attribute.level_num;
 		Boss.GetComponent<attribute> ().BossUpdate ();
         try
         {
@@ -168,8 +169,8 @@ public class Safe_area_sever : MonoBehaviour
 				{
                 	player.GetComponent<attribute>().ATK = 70 ;
                 	player.GetComponent<attribute>().DEF = 10 ;
-                	player.GetComponent<attribute>().ATKGrowth = 7f ;
-                	player.GetComponent<attribute>().DEFGrowth = 1f ;
+                	player.GetComponent<attribute>().ATKGrowth = 6f ;
+                	player.GetComponent<attribute>().DEFGrowth = 2f ;
                 	player.GetComponent<attribute>().HPGrowth = 8f;
                 	player.GetComponent<attribute>().FireRate = 0.8f;
                 	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.5f;
@@ -200,8 +201,8 @@ public class Safe_area_sever : MonoBehaviour
                 player.GetComponent<attribute>().ZhiYe = "warrior";
 				if(player_attribute.IsInit)
 				{
-					player.GetComponent<attribute>().ATK = 50 ;
-                	player.GetComponent<attribute>().DEF = 30 ;
+					player.GetComponent<attribute>().ATK = 45 ;
+                	player.GetComponent<attribute>().DEF = 35 ;
                 	player.GetComponent<attribute>().ATKGrowth = 5f ;
                 	player.GetComponent<attribute>().DEFGrowth = 3f ;
                 	player.GetComponent<attribute>().HPGrowth = 10f;
@@ -231,15 +232,6 @@ public class Safe_area_sever : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-        if (WinFlag)
-            return;
-        
-        if ((Boss.transform.position - player.transform.position).sqrMagnitude < 10000)
-            Boss_Slider.SetActive(true);
-        else
-            Boss_Slider.SetActive(false);
-        Boss.transform.Find("Boss Partical").Rotate(0,0, 20 * Time.fixedDeltaTime);
-       // Boss.transform.Find("Particle System").Rotate()
         if (player.transform.position.x < 2 * quad1.transform.position.x ||
                 player.transform.position.x > 2 * quad3.transform.position.x - map_scale_x ||
                 player.transform.position.z < 2 * quad2.transform.position.z ||
@@ -252,6 +244,17 @@ public class Safe_area_sever : MonoBehaviour
         {
             player.GetComponent<ThirdPersonUserControl>().StateIcon.transform.Find("Unsafe").gameObject.GetComponent<Image>().fillAmount = 0.0f;
         }
+        if (WinFlag)
+            return;
+
+        if ((Boss.transform.position - player.transform.position).sqrMagnitude < 10000 && !WinFlag)
+            Boss_Slider.SetActive(true);
+        else
+            Boss_Slider.SetActive(false);
+        Boss.transform.Find("Boss Partical").Rotate(0,0, 20 * Time.fixedDeltaTime);
+       // Boss.transform.Find("Particle System").Rotate()
+
+        
             
         if (timer > 0)
             timer -= Time.fixedDeltaTime;
@@ -272,7 +275,7 @@ public class Safe_area_sever : MonoBehaviour
 				Vector3 t = new Vector3(SafeCenter.x,3.9f,SafeCenter.z);
 				while (gameobject_generate.IsCoincide (new GameObjectGenerate.GameObjectNode (t.x, t.y, t.z, boss_length, boss_width, 0)))
 				{
-					t = t + new Vector3 (UnityEngine.Random.Range (-4f * boss_length, 4f * boss_length), 0, UnityEngine.Random.Range (-4f * boss_width, 4f * boss_width));
+					t = t + new Vector3 (UnityEngine.Random.Range (-12f * boss_length, 12f * boss_length), 0, UnityEngine.Random.Range (-12f * boss_width, 12f * boss_width));
 				}
 				Boss.transform.position = t;
 
@@ -294,23 +297,25 @@ public class Safe_area_sever : MonoBehaviour
             Boss_Slider.SetActive(false);
             //Boss.transform.Find("Boss Partical").gameObject.SetActive(false);
             //Boss.transform.Find("Died Partical").gameObject.SetActive(true);
-            quad1.transform.position = new Vector3(0f, 0.02f, map_scale_z / 2);
-            quad2.transform.position = new Vector3(map_scale_x / 2, 0.02f, 0f);
-            quad3.transform.position = new Vector3(map_scale_x - 0f, 0.02f, map_scale_z / 2);
-            quad4.transform.position = new Vector3(map_scale_x / 2, 0.02f, map_scale_z - 0f);
+            //quad1.transform.position = new Vector3(0f, 0.02f, map_scale_z / 2);
+            //quad2.transform.position = new Vector3(map_scale_x / 2, 0.02f, 0f);
+            //quad3.transform.position = new Vector3(map_scale_x - 0f, 0.02f, map_scale_z / 2);
+            //quad4.transform.position = new Vector3(map_scale_x / 2, 0.02f, map_scale_z - 0f);
 
-            quad1.transform.localScale = new Vector3(0f, map_scale_z, 1f);
-            quad2.transform.localScale = new Vector3(0f, map_scale_x, 1f);
-            quad3.transform.localScale = new Vector3(0f, map_scale_z, 1f);
-            quad4.transform.localScale = new Vector3(0f, map_scale_x, 1f);
+            //quad1.transform.localScale = new Vector3(0f, map_scale_z, 1f);
+            //quad2.transform.localScale = new Vector3(0f, map_scale_x, 1f);
+            //quad3.transform.localScale = new Vector3(0f, map_scale_z, 1f);
+            //quad4.transform.localScale = new Vector3(0f, map_scale_x, 1f);
 
             player.GetComponent<attribute>().update_HP(player.GetComponent<attribute>().HP_max);
+            //player_attribute.SavePlayerAttribute();
+            player_attribute.SaveAttributeInFile();
             shop.transform.position = Boss.transform.position;
             shop.SetActive(true);
-
+            GameLevelUI.transform.Find("Text").gameObject.GetComponent<Text>().text = (player_attribute.level_num+1).ToString();
             //event when success
 
-			//player_attribute.SavePlayerAttribute();
+            //player_attribute.SavePlayerAttribute();
 
             return;
         }

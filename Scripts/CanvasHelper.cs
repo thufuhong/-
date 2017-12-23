@@ -42,10 +42,10 @@ public class CanvasHelper : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 "冷却时间：<color=blue>" + c.Skill_3_CoolDownTime_Max.ToString() + "</color>\n" +
                 "等级：<color=blue>" + _attr.Skill_Level[2].ToString() + "</color>\n" +
                 "持续时间：<color=red>" + ((c.Skill_3_Value[0] + c.Skill_3_Value[1] * _attr.Skill_Level[2])).ToString() + "</color>\n" +
-                "防御力提升：<color=red>" + ((c.Skill_1_Value[1] + c.Skill_1_Value[4] * _attr.Skill_Level[0] - 1) * 100).ToString() + "%</color>\n" +
+                "防御力提升：<color=red>" + ((c.Skill_1_Value[1] + c.Skill_1_Value[4] * _attr.Skill_Level[2] - 1) * 100).ToString() + "%</color>\n" +
                 "<color=gray>下次升级：\n" +
                 "持续时间：" + ((c.Skill_3_Value[0] + c.Skill_3_Value[1] * (_attr.Skill_Level[2] + 1))).ToString() + "\n" +
-                "防御力提升：" + ((c.Skill_1_Value[1] + c.Skill_1_Value[4] * (_attr.Skill_Level[0] + 1) - 1) * 100).ToString() + "%\n" +
+                "防御力提升：" + ((c.Skill_1_Value[1] + c.Skill_1_Value[4] * (_attr.Skill_Level[2] + 1) - 1) * 100).ToString() + "%\n" +
                 "</color></size>";
         if (name == "Skill_4")
             text1.text = "<b><size=25>反击螺旋 <color=blue>[P]</color></size></b>\n\n<size=15>斧王召唤能量粒子攻击附近的单位，不受攻击距离的限制。\n\n" +

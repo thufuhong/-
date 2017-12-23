@@ -134,7 +134,7 @@ public class attribute : MonoBehaviour
 	public void dropGoods(string type) {
 		if (type == "coin") {
 			GameObject coin = Instantiate (transform.Find ("/Terrain").GetComponent<GameObjectGenerate> ().itemCoin,
-				transform.position + new Vector3(0, (float) (GetComponent<CapsuleCollider>().bounds.size.y * 0.5), 0),
+				transform.position + new Vector3(0, (float) (GetComponent<CapsuleCollider>().bounds.size.y * 0.5) * 0 + 0.8f, 0),
 				Quaternion.Euler (-90, 0, 0)
 			);
 			coin.GetComponent<pickGoods> ().value = DropGold;
@@ -316,10 +316,10 @@ public class attribute : MonoBehaviour
     // 玩家每回合大致获得80点总属性，怪物每回合获得90点属性
 	public void EnemyUpdate()
 	{
-		HP = HP_max = 120f * Level + 30f;
+		HP = HP_max = 60f * Level + 50f;
 		ATK = 55f * Level - 10f;
 		DEF = 35f * Level - 10f;
-		DropGold = 20f * Level + 10f;
+		DropGold = 30f * Level + 10f;
         //DropEXP = 200f * Level + 200f;
         DropEXP = 400f;
         FireRate = 0.5f / Level + 0.5f;
@@ -334,7 +334,7 @@ public class attribute : MonoBehaviour
         //DropEXP = 600f * Level + 100f;
         DropEXP = 1000f;
 
-        safe_area_sever.GetComponent<Safe_area_sever>().DamagePerSecond = 2f*Level + 2f;
+        safe_area_sever.GetComponent<Safe_area_sever>().DamagePerSecond = 4f*Level - 2f;
 	}
 
 	private void PrintAttribute()
@@ -426,7 +426,7 @@ public class attribute : MonoBehaviour
 			tempString += ("Skill_Level1 " + Skill_Level [1].ToString () + "\n");
 			tempString += ("Skill_Level2 " + Skill_Level [2].ToString () + "\n");
 			tempString += ("Skill_Level3 " + Skill_Level [3].ToString () + "\n");
-			tempString += ("level_num " + level_num.ToString () + "\n");
+			tempString += ("level_num " + (level_num+1).ToString () + "\n");
             for (int _i = 0; _i < 12; _i++)
             {
                 tempString += ("Item_num" + _i.ToString() + " " + bag.GetComponent<bagManager>().ItemOwned[_i].ToString() + "\n");
