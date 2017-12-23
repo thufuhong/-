@@ -78,7 +78,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         {
             if(colli.name == "Boss Partical")
             // Boss ATK: 20, And 50% of Player's DEF is ignored.
-                this.gameObject.GetComponent<attribute>().update_HP(Mathf.Min(-boss.GetComponent<attribute>().ATK+ 0.5f*(this.gameObject.GetComponent<attribute>().DEF+ this.gameObject.GetComponent<attribute>().DEF_bouns),0));
+                this.gameObject.GetComponent<attribute>().update_HP(Mathf.Min(-boss.GetComponent<attribute>().ATK+ 0.7f*(this.gameObject.GetComponent<attribute>().DEF+ this.gameObject.GetComponent<attribute>().DEF_bouns),0));
 
         }
 
@@ -132,7 +132,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     Skill_3_active = false;
                     this.gameObject.transform.Find("Skill_3_shelter").gameObject.SetActive(false);
                     Sa.DamagePerSecond = Safe_area_damage_persecond_record;
-                    _attr.DEF_bouns -= _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0] - 1);
+                    _attr.DEF_bouns -= _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[2] - 1);
                 }
             }
             if (Skill_4_CoolDownTime > 0)
@@ -217,7 +217,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 this.gameObject.transform.Find("Skill_3_shelter").gameObject.SetActive(true);
                 Safe_area_damage_persecond_record = Sa.DamagePerSecond;
                 Sa.DamagePerSecond = 0;
-                _attr.DEF_bouns += _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0] - 1);
+                _attr.DEF_bouns += _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[2] - 1);
             }
             if (state_now == Animator.StringToHash("Grounded") && Input.GetKeyDown(KeyCode.P) && Skill_4_CoolDownTime <= 0 && _attr.Skill_Level[3] > 0)
             {

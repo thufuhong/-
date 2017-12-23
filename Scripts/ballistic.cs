@@ -43,8 +43,10 @@ public class ballistic : MonoBehaviour {
             {
                 From.GetComponent<attribute>().update_EXP(t.GetComponent<attribute>().DropEXP);
                 // From.GetComponent<attribute>().gold += t.GetComponent<attribute>().DropGold;
-				// can't get gold directly, produce a gold coin
-				t.GetComponent<attribute> ().dropGoods("coin");
+                // can't get gold directly, produce a gold coin
+                // Unsolved BUG on disappearing coins
+                // t.GetComponent<attribute> ().dropGoods("coin");
+                From.GetComponent<attribute>().update_gold(t.GetComponent<attribute>().DropGold);
             }
         }
     }
