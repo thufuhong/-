@@ -2144,7 +2144,7 @@ MonoBehaviour:
   choosePlayer: {fileID: 1165365812}
   loadgame: {fileID: 1463075182}
   developer: {fileID: 996389026}
-  loadSprite: {fileID: 0}
+  loadSprite: {fileID: 1264367119}
 --- !u!114 &446102153
 MonoBehaviour:
   m_ObjectHideFlags: 0
