@@ -62,7 +62,7 @@ public class MainMenu_Sever : MonoBehaviour {
     void LoadFirstScene()
     {
         // UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
-		StartCoroutine(loadScene());
+		StartCoroutine(loadScene("LevelFirst"));
     }
 
 	void LoadArchive(int num)
@@ -74,10 +74,11 @@ public class MainMenu_Sever : MonoBehaviour {
 		LoadFirstScene();
 	}
 
-	IEnumerator loadScene()
+	IEnumerator loadScene(string scene)
 	{
-		AsyncOperation async = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync ("LevelFirst");
+		AsyncOperation async = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync (scene);
 		loadSprite.GetComponent<LoadRotate> ().async = async;
+		async.allowSceneActivation = false;
 		yield return async;
 	}
 
