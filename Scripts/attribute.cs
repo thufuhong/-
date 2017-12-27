@@ -321,7 +321,7 @@ public class attribute : MonoBehaviour
 		DEF = 35f * Level - 10f;
 		DropGold = 30f * Level + 10f;
         //DropEXP = 200f * Level + 200f;
-        DropEXP = 400f;
+        DropEXP = 300f;
         FireRate = 0.5f / Level + 0.5f;
 	}
 

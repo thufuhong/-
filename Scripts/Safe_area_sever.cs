@@ -145,6 +145,7 @@ public class Safe_area_sever : MonoBehaviour
         try
         {
             int _charac = PlayerPrefs.GetInt("Character");
+            player.GetComponent<attribute>().NiCheng = PlayerPrefs.GetString("player_name") == "" ? "FuHong" : PlayerPrefs.GetString("player_name");
             if (_charac == 1)
             {
                 player.transform.Find("axe_armor").gameObject.SetActive(false);
@@ -251,11 +252,12 @@ public class Safe_area_sever : MonoBehaviour
             Boss_Slider.SetActive(true);
         else
             Boss_Slider.SetActive(false);
-        Boss.transform.Find("Boss Partical").Rotate(0,0, 20 * Time.fixedDeltaTime);
-       // Boss.transform.Find("Particle System").Rotate()
+        Boss.transform.Rotate(0, 0, 26 * Time.fixedDeltaTime);
+        //Boss.transform.Find("Boss Partical").Rotate(0,0, 20 * Time.fixedDeltaTime);
+        // Boss.transform.Find("Particle System").Rotate()
 
-        
-            
+
+
         if (timer > 0)
             timer -= Time.fixedDeltaTime;
         if (boss_transition_timer > 0)

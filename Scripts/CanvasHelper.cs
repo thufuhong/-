@@ -32,10 +32,10 @@ public class CanvasHelper : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 "冷却时间：<color=blue>" + c.Skill_2_CoolDownTime_Max.ToString() + "</color>\n" +
                 "等级：<color=blue>" + _attr.Skill_Level[1].ToString() + "</color>\n" +
                 "生命回复：<color=red>" + ((c.Skill_2_Value[0] + c.Skill_2_Value[2] * _attr.Skill_Level[1])).ToString() + "</color>\n" +
-                "每秒治疗：<color=red>" + ((c.Skill_1_Value[1] + c.Skill_1_Value[3] * _attr.Skill_Level[1])).ToString() + "</color>\n" +
+                "每秒治疗：<color=red>" + ((c.Skill_2_Value[1] + c.Skill_2_Value[3] * _attr.Skill_Level[1])).ToString() + "</color>\n" +
                 "<color=gray>下次升级：\n" +
                 "生命回复：" + ((c.Skill_2_Value[0] + c.Skill_2_Value[2] * (_attr.Skill_Level[1]+1))).ToString() + "\n" +
-                "每秒治疗：" + ((c.Skill_1_Value[1] + c.Skill_1_Value[3] * (_attr.Skill_Level[1] + 1))).ToString() + "\n" +
+                "每秒治疗：" + ((c.Skill_2_Value[1] + c.Skill_2_Value[3] * (_attr.Skill_Level[1] + 1))).ToString() + "\n" +
                 "</color></size>";
         if (name == "Skill_3")
             text1.text = "<b><size=25>昆恩法印 <color=blue>[O]</color></size></b>\n\n<size=15>斧王开启昆恩法印，短暂提升防御力，并免疫危险区域的伤害\n\n" +
