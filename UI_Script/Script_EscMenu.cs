@@ -13,7 +13,7 @@ public class Script_EscMenu : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-        root = GameObject.Find("Canvas");
+        root = gameObject;//.Find("Canvas");
         EscMenu = root.transform.Find("EscMenu").gameObject;
         SettingMenu = root.transform.Find("SettingMenu").gameObject;
 	}
