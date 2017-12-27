@@ -40,7 +40,7 @@ public class MainMenu_Sever : MonoBehaviour {
     }
     public void ButtonLoad(int x)
     {
-
+        _x = x;
         loadgame.SetActive(false);
         BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
         CameraTarget = CameraTarget + DeltaCenter;
