@@ -188,6 +188,11 @@ public class attribute : MonoBehaviour
 	void FixedUpdate () {
         try
         {
+            if (skillUp_Num > 0)
+            {
+                SkillUp_button.transform.Find("Skill_Up_Num").gameObject.GetComponent<Text>().text = skillUp_Num.ToString();
+                SkillUp_button.SetActive(true);
+            }
             if (Skill_Level[0] == 0)
                 Skill_1_Icon.GetComponent<Image>().fillAmount = 1;
             if (Skill_Level[1] == 0)
