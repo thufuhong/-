@@ -2202,7 +2202,7 @@ MonoBehaviour:
   ForceBackCounterMax: 10
   ForceBackCounter: -1
   ForceBackDerection: {x: 0, y: 0, z: 0}
-  skillUp_Num: 1
+  skillUp_Num: 0
   level_num: 1
   save_time: 
   IsInit: 0
@@ -5601,7 +5601,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1257903760}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 453, y: 245, z: 0}
+  m_LocalPosition: {x: 357.5, y: 180.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1165365813}
