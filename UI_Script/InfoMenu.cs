@@ -31,6 +31,16 @@ public class InfoMenu : MonoBehaviour
 	void Update () {
         nicheng.text = Fuwang.GetComponent<attribute>().NiCheng;
         zhiye.text = Fuwang.GetComponent<attribute>().ZhiYe == "warrior"?"战士":"法师";
+        if(Fuwang.GetComponent<attribute>().ZhiYe == "warrior")
+        {
+            gameObject.transform.Find("Head").gameObject.SetActive(true);
+            gameObject.transform.Find("Head2").gameObject.SetActive(false);
+        }
+        else
+        {
+            gameObject.transform.Find("Head").gameObject.SetActive(false);
+            gameObject.transform.Find("Head2").gameObject.SetActive(true);
+        }
         dengji.text = ((int)Fuwang.GetComponent<attribute>().Level).ToString();
         atk.text = ((int)Fuwang.GetComponent<attribute>().ATK+ (int)Fuwang.GetComponent<attribute>().ATK_bouns).ToString();
         def.text = ((int)Fuwang.GetComponent<attribute>().DEF+ (int)Fuwang.GetComponent<attribute>().DEF_bouns).ToString();
