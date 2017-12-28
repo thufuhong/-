@@ -122,7 +122,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     Skill_2_active = false;
                 }
             }
-            if (Skill_3_CoolDownTime > 0)
+            if (Skill_3_CoolDownTime > 0 || Skill_3_active)
             {
                 Skill_3_CoolDownTime -= Time.fixedDeltaTime;
                 Skill_3_Icon.GetComponent<Image>().fillAmount = Mathf.Max(0, Skill_3_CoolDownTime) / Skill_3_CoolDownTime_Max;
@@ -212,6 +212,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             }
             if (state_now == Animator.StringToHash("Grounded") && Input.GetKeyDown(KeyCode.O) && Skill_3_CoolDownTime <= 0 && _attr.Skill_Level[2] > 0)
             {
+                if (Skill_3_active)
+                {
+                    Skill_3_active = false;
+                    this.gameObject.transform.Find("Skill_3_shelter").gameObject.SetActive(false);
+                    Sa.DamagePerSecond = Safe_area_damage_persecond_record;
+                    _attr.DEF_bouns -= _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[2] - 1);
+                }
                 Skill_3_active = true;
                 Skill_3_CoolDownTime = Skill_3_CoolDownTime_Max;
                 this.gameObject.transform.Find("Skill_3_shelter").gameObject.SetActive(true);
