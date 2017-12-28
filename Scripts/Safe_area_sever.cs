@@ -19,6 +19,7 @@ public class Safe_area_sever : MonoBehaviour
     public GameObject TimerUI;
     public Sprite TimerUI_red;
     public Sprite TimerUI_blue;
+    public GameObject AvatarIcon;
 
     public Avatar axe;
     public Avatar crystal;
@@ -145,6 +146,10 @@ public class Safe_area_sever : MonoBehaviour
         try
         {
             int _charac = PlayerPrefs.GetInt("Character");
+            Debug.Log(_charac.ToString() + " 11111 " + player_attribute.ZhiYe);
+            if (!(player_attribute.IsInit))
+                _charac = player_attribute.ZhiYe == "warrior" ? 0 : 1;
+            Debug.Log(_charac.ToString() + " 22222 " + player_attribute.ZhiYe);
             player.GetComponent<attribute>().NiCheng = PlayerPrefs.GetString("player_name") == "" ? "FuHong" : PlayerPrefs.GetString("player_name");
             if (_charac == 1)
             {
@@ -161,6 +166,9 @@ public class Safe_area_sever : MonoBehaviour
                 player.transform.Find("crystal_maiden_shoulder").gameObject.SetActive(true);
                 player.transform.Find("crystal_maiden_shoulder_bow").gameObject.SetActive(true);
                 player.transform.Find("Root_0").gameObject.SetActive(true);
+
+                AvatarIcon.transform.Find("Head").gameObject.SetActive(false);
+                AvatarIcon.transform.Find("Head2").gameObject.SetActive(true);
 
                 player.GetComponent<Animator>().avatar = crystal;
                 player.transform.Find("Attack_area").gameObject.SetActive(false);
@@ -195,6 +203,9 @@ public class Safe_area_sever : MonoBehaviour
                 player.transform.Find("crystal_maiden_shoulder").gameObject.SetActive(false);
                 player.transform.Find("crystal_maiden_shoulder_bow").gameObject.SetActive(false);
                 player.transform.Find("Root_0").gameObject.SetActive(false);
+
+                AvatarIcon.transform.Find("Head").gameObject.SetActive(true);
+                AvatarIcon.transform.Find("Head2").gameObject.SetActive(false);
 
                 player.GetComponent<Animator>().avatar = axe;
                 player.transform.Find("Attack_area").gameObject.SetActive(true);

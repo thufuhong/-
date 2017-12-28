@@ -239,9 +239,10 @@ public class attribute : MonoBehaviour
 		PlayerPrefs.SetFloat ("ForceBackPower", ForceBackPower);
 		PlayerPrefs.SetFloat ("ForceBackCounterMax", ForceBackCounterMax);
 		PlayerPrefs.SetFloat ("ForceBackCounter", ForceBackCounter);
-        
+        PlayerPrefs.SetString("ZhiYe", ZhiYe);
 
-		PlayerPrefs.SetInt ("skillUp_Num", skillUp_Num);
+
+        PlayerPrefs.SetInt ("skillUp_Num", skillUp_Num);
 		PlayerPrefs.SetFloat ("Skill_Level0", Skill_Level[0]);
 		PlayerPrefs.SetFloat ("Skill_Level1", Skill_Level[1]);
 		PlayerPrefs.SetFloat ("Skill_Level2", Skill_Level[2]);
@@ -295,8 +296,9 @@ public class attribute : MonoBehaviour
 		ForceBackPower = PlayerPrefs.GetFloat ("ForceBackPower", 1);
 		ForceBackCounterMax = PlayerPrefs.GetFloat ("ForceBackCounterMax", 10);
 		ForceBackCounter = PlayerPrefs.GetFloat ("ForceBackCounter", -1);
+        ZhiYe = PlayerPrefs.GetString("ZhiYe");
 
-		skillUp_Num = PlayerPrefs.GetInt ("skillUp_Num", 0);
+        skillUp_Num = PlayerPrefs.GetInt ("skillUp_Num", 0);
 		Skill_Level[0] = PlayerPrefs.GetFloat ("Skill_Level0", 0);
 		Skill_Level[1] = PlayerPrefs.GetFloat ("Skill_Level1", 0);
 		Skill_Level[2] = PlayerPrefs.GetFloat ("Skill_Level2", 0);
