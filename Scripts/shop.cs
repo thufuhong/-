@@ -15,6 +15,7 @@ public class shop : MonoBehaviour {
     private bool SaveOpened = false;
     private bool next_level = false;
 
+    private float button_cooldown = -1;
     // Use this for initialization
     void Start () {
 		
@@ -27,6 +28,8 @@ public class shop : MonoBehaviour {
 
     void FixedUpdate()
     {
+        if (button_cooldown > 0)
+            button_cooldown -= Time.fixedDeltaTime;
         if (!isPlayerNearBy && (this.gameObject.transform.position - player.transform.position).sqrMagnitude < 500)
         {
             isPlayerNearBy = true;
@@ -35,27 +38,32 @@ public class shop : MonoBehaviour {
         }
         if (isPlayerNearBy)
         {
-            if (shopOpened && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape)))
+            //if (shopOpened && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape)))
+            //{
+            //    ShopObject.SetActive(false);
+            //    shopOpened = false;
+            //    return;
+            //}
+            //if (!shopOpened && Input.GetKeyDown(KeyCode.E))
+            //{
+            //    ShopObject.SetActive(true);
+            //    ShopObject.GetComponent<bagManager>().RefreshBag();
+            //    shopOpened = true;
+            //    //Put SHOP code here
+            //}
+            
+            if (button_cooldown<0 && SaveObject.activeInHierarchy && (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.Escape)))
             {
-                ShopObject.SetActive(false);
-                shopOpened = false;
-                return;
-            }
-            if (!shopOpened && Input.GetKeyDown(KeyCode.E))
-            {
-                ShopObject.SetActive(true);
-                ShopObject.GetComponent<bagManager>().RefreshBag();
-                shopOpened = true;
-                //Put SHOP code here
-            }
-            if (SaveOpened && (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.Escape)))
-            {
+                //Debug.Log(SaveObject.activeInHierarchy.ToString() + "0" + Input.GetKeyDown(KeyCode.R).ToString());
+                button_cooldown = 0.2f;
                 SaveObject.SetActive(false);
                 SaveOpened = false;
                 return;
             }
-            if (!SaveOpened && Input.GetKeyDown(KeyCode.R))
+            if (button_cooldown < 0 && !(SaveObject.activeInHierarchy) && Input.GetKeyDown(KeyCode.R))
             {
+                //Debug.Log(SaveObject.activeInHierarchy.ToString() + "1" + Input.GetKeyDown(KeyCode.R).ToString());
+                button_cooldown = 0.2f;
                 SaveObject.SetActive(true);
                 Transform _t;
                 if (player.GetComponent<attribute>().GetSaveTimeFromFile(0) == " ")

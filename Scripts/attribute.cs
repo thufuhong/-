@@ -72,7 +72,7 @@ public class attribute : MonoBehaviour
 				return HP;
 			}
             HP += value;
-            if(if_Player && ui_HP != null)
+            if(if_Player)
                 ui_HP.value = Mathf.Max(HP, 0) / HP_max;
             if (HP >= HP_max)
                 HP = HP_max;
@@ -93,7 +93,7 @@ public class attribute : MonoBehaviour
                 ifAlive = false;
                 if(this.gameObject.tag == "Team1")
                     Destroy(this.gameObject, 1.5f);
-				if (this.gameObject.tag == "Team0" && DieWindow != null)
+                if (this.gameObject.tag == "Team0")
                     DieWindow.SetActive(true);
                 // other event when death....
             }
@@ -107,51 +107,44 @@ public class attribute : MonoBehaviour
         if(ifAlive)
         {
             EXP += value;
-			EXP = Mathf.Max (0, EXP);
         }
+        
         while(EXP>= EXPForLevelUp)
         {
             EXP -= EXPForLevelUp;
             Level++;
             skillUp_Num++;
             Debug.Log("SkillUpNum: " + skillUp_Num.ToString());
-			if(SkillUp_button != null)
-				SkillUp_button.transform.Find("Skill_Up_Num").gameObject.GetComponent<Text>().text = skillUp_Num.ToString();
+            SkillUp_button.transform.Find("Skill_Up_Num").gameObject.GetComponent<Text>().text = skillUp_Num.ToString();
             ATK += ATKGrowth;
             DEF += DEFGrowth;
             HP_max += HPGrowth;
             MP_max += MPGrowth;
-			if (ParticalLevelUp != null) ParticalLevelUp.SetActive(true);
-			if (SkillUp_button != null) SkillUp_button.SetActive(true);
+            ParticalLevelUp.SetActive(true);
+            SkillUp_button.SetActive(true);
             
         }
 
-		if (if_Player && ui_EXP!=null)
+        if (if_Player)
             ui_EXP.value = Mathf.Max(EXP, 0) / EXPForLevelUp;
 
     }
 
 	// interface about goods droped when be killed
-	public GameObject dropGoods(string type) {
+	public void dropGoods(string type) {
 		if (type == "coin") {
-			GameObject coin = Instantiate (
-				/*transform.Find ("/Terrain").GetComponent<GameObjectGenerate> ().itemCoin,*/
-				Resources.Load("Prefabs/goldCoin") ,
+			GameObject coin = Instantiate (transform.Find ("/Terrain").GetComponent<GameObjectGenerate> ().itemCoin,
 				transform.position + new Vector3(0, (float) (GetComponent<CapsuleCollider>().bounds.size.y * 0.5) * 0 + 0.8f, 0),
 				Quaternion.Euler (-90, 0, 0)
-			) as GameObject;
+			);
 			coin.GetComponent<pickGoods> ().value = DropGold;
-			coin.GetComponent<pickGoods> ().type = "GOLD+";
-			return coin;
 			// Debug.Log ("coin" + coin.GetComponent<pickGoods> ().value + " cur:" + DropGold);
 		}
-		return null;
 	}
 
 	public void update_gold(float value) {
 		if (ifAlive) {
 			gold += value;
-			gold = Mathf.Max (0, gold);
 		}
 	}
 
@@ -184,10 +177,8 @@ public class attribute : MonoBehaviour
             skillUp_Num++;
         if (skillUp_Num > 0)
         {
-			if (SkillUp_button != null) {
-				SkillUp_button.transform.Find ("Skill_Up_Num").gameObject.GetComponent<Text> ().text = skillUp_Num.ToString ();
-				SkillUp_button.SetActive (true);
-			}
+            SkillUp_button.transform.Find("Skill_Up_Num").gameObject.GetComponent<Text>().text = skillUp_Num.ToString();
+            SkillUp_button.SetActive(true);
         }
             
 
@@ -197,6 +188,11 @@ public class attribute : MonoBehaviour
 	void FixedUpdate () {
         try
         {
+            if (skillUp_Num > 0)
+            {
+                SkillUp_button.transform.Find("Skill_Up_Num").gameObject.GetComponent<Text>().text = skillUp_Num.ToString();
+                SkillUp_button.SetActive(true);
+            }
             if (Skill_Level[0] == 0)
                 Skill_1_Icon.GetComponent<Image>().fillAmount = 1;
             if (Skill_Level[1] == 0)
@@ -243,9 +239,10 @@ public class attribute : MonoBehaviour
 		PlayerPrefs.SetFloat ("ForceBackPower", ForceBackPower);
 		PlayerPrefs.SetFloat ("ForceBackCounterMax", ForceBackCounterMax);
 		PlayerPrefs.SetFloat ("ForceBackCounter", ForceBackCounter);
-        
+        PlayerPrefs.SetString("ZhiYe", ZhiYe);
 
-		PlayerPrefs.SetInt ("skillUp_Num", skillUp_Num);
+
+        PlayerPrefs.SetInt ("skillUp_Num", skillUp_Num);
 		PlayerPrefs.SetFloat ("Skill_Level0", Skill_Level[0]);
 		PlayerPrefs.SetFloat ("Skill_Level1", Skill_Level[1]);
 		PlayerPrefs.SetFloat ("Skill_Level2", Skill_Level[2]);
@@ -299,8 +296,9 @@ public class attribute : MonoBehaviour
 		ForceBackPower = PlayerPrefs.GetFloat ("ForceBackPower", 1);
 		ForceBackCounterMax = PlayerPrefs.GetFloat ("ForceBackCounterMax", 10);
 		ForceBackCounter = PlayerPrefs.GetFloat ("ForceBackCounter", -1);
+        ZhiYe = PlayerPrefs.GetString("ZhiYe");
 
-		skillUp_Num = PlayerPrefs.GetInt ("skillUp_Num", 0);
+        skillUp_Num = PlayerPrefs.GetInt ("skillUp_Num", 0);
 		Skill_Level[0] = PlayerPrefs.GetFloat ("Skill_Level0", 0);
 		Skill_Level[1] = PlayerPrefs.GetFloat ("Skill_Level1", 0);
 		Skill_Level[2] = PlayerPrefs.GetFloat ("Skill_Level2", 0);
@@ -330,7 +328,7 @@ public class attribute : MonoBehaviour
 		DEF = 35f * Level - 10f;
 		DropGold = 30f * Level + 10f;
         //DropEXP = 200f * Level + 200f;
-        DropEXP = 400f;
+        DropEXP = 300f;
         FireRate = 0.5f / Level + 0.5f;
 	}
 
@@ -435,12 +433,11 @@ public class attribute : MonoBehaviour
 			tempString += ("Skill_Level1 " + Skill_Level [1].ToString () + "\n");
 			tempString += ("Skill_Level2 " + Skill_Level [2].ToString () + "\n");
 			tempString += ("Skill_Level3 " + Skill_Level [3].ToString () + "\n");
-			tempString += ("level_num " + (level_num + 1).ToString () + "\n");
-			if (bag != null) {
-				for (int _i = 0; _i < 12; _i++) {
-					tempString += ("Item_num" + _i.ToString () + " " + bag.GetComponent<bagManager> ().ItemOwned [_i].ToString () + "\n");
-				}
-			}
+			tempString += ("level_num " + (level_num+1).ToString () + "\n");
+            for (int _i = 0; _i < 12; _i++)
+            {
+                tempString += ("Item_num" + _i.ToString() + " " + bag.GetComponent<bagManager>().ItemOwned[_i].ToString() + "\n");
+            }
             tempString += ("ZhiYe " + ZhiYe +"\n");
             save_time = System.DateTime.Now.ToString ();
 			tempString += ("save_time " + save_time);
@@ -560,16 +557,13 @@ public class attribute : MonoBehaviour
 			Skill_Level [3] = float.Parse (strArray [1]);
 			
 			strArray = allArray [index++].Split (' ');
-			// save it as level_num +1
-			// read it should be level_num -1
-			level_num = int.Parse (strArray [1]) - 1;
+			level_num = int.Parse (strArray [1]);
 
-			if (bag != null) {
-				for (int _i = 0; _i < 12; _i++) {
-					strArray = allArray [index++].Split (' ');
-					bag.GetComponent<bagManager> ().ItemOwned [_i] = int.Parse (strArray [1]);
-				}
-			}
+            for (int _i = 0; _i < 12; _i++)
+            {
+                strArray = allArray[index++].Split(' ');
+                bag.GetComponent<bagManager>().ItemOwned[_i] = int.Parse(strArray[1]);
+            }
 
             strArray = allArray[index++].Split(' ');
             ZhiYe = strArray[1];
@@ -643,9 +637,7 @@ public class attribute : MonoBehaviour
 
     public int GetLevelOfGameFromFile(int num_save = 0)
 	{
-		// save it as level_num +1
-		// read it should be level_num -1
-		return int.Parse(GetAttributeFromFile ("level_num", num_save)) - 1;
+		return int.Parse(GetAttributeFromFile ("level_num", num_save));
 	}
 
 

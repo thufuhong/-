@@ -11,8 +11,10 @@ public class MainMenu_Sever : MonoBehaviour {
     public GameObject choosePlayer;
     public GameObject loadgame;
     public GameObject developer;
+    public GameObject input;
 
 	public GameObject loadSprite;
+    public Transform SpotLight;
 
     private Vector3 BackgtoundTarget;
     private Vector3 CameraTarget;
@@ -29,7 +31,8 @@ public class MainMenu_Sever : MonoBehaviour {
     {
         PlayerPrefs.SetInt("Character", x);
 		PlayerPrefs.SetInt ("level_num", 1);
-		GetComponent<attribute> ().IsInit = true;
+        PlayerPrefs.SetString("player_name", input.transform.Find("Text").gameObject.GetComponent<Text>().text);
+        GetComponent<attribute> ().IsInit = true;
 		GetComponent<attribute> ().SavePlayerAttribute ();
         BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
         CameraTarget = CameraTarget + DeltaCenter;
@@ -37,7 +40,7 @@ public class MainMenu_Sever : MonoBehaviour {
     }
     public void ButtonLoad(int x)
     {
-
+        _x = x;
         loadgame.SetActive(false);
         BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
         CameraTarget = CameraTarget + DeltaCenter;
@@ -124,6 +127,7 @@ public class MainMenu_Sever : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
+        SpotLight.localPosition = new Vector3(8.2f * Mathf.Cos(counter * 3 * Time.fixedDeltaTime), 4.17f, -8.32f);
         counter = counter + 1;
         //if (counter % 50 == 0)
             //Debug.Log("Sever Alive.");
