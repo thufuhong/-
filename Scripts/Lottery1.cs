@@ -63,6 +63,10 @@ public class Lottery1 : MonoBehaviour {
                 if (state == false)
                 {
                     _t = Instantiate(item[itemid], transform.position, transform.rotation, transform);
+                    if (itemid >= 3)
+                    {
+                        _t.transform.Find("value").gameObject.GetComponent<Text>().text = "+" + (ItemLevel == 0 ? "15" : ItemLevel == 1 ? "9" : ItemLevel == 2 ? "6" : "3");
+                    }
                     _t.transform.Find("GreatLight").localScale = ItemLevel == 0 ? new Vector3(0.5f, 0.5f, 1f) : ItemLevel == 1 ? new Vector3(0.4f, 0.4f, 1f) : ItemLevel == 2 ? new Vector3(0.3f, 0.3f, 1f) : new Vector3(0.2f, 0.2f, 1f);
                     RawImage[] _list = _t.transform.Find("GreatLight").gameObject.GetComponentsInChildren<RawImage>();
                     for (int j = 0; j < _list.Length; j++)

@@ -1,16 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Script_EscMenu : MonoBehaviour
 {
     GameObject root;
     GameObject EscMenu;
     GameObject SettingMenu;
+	public GameObject player;
+    public GameObject mask;
 	// Use this for initialization
-	void Start () {
-
-        root = GameObject.Find("Canvas");
+	void Start () 
+	{
+        root = gameObject;//.Find("Canvas");
         EscMenu = root.transform.Find("EscMenu").gameObject;
         SettingMenu = root.transform.Find("SettingMenu").gameObject;
 	}
@@ -19,6 +22,9 @@ public class Script_EscMenu : MonoBehaviour
 	void Update () {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+			//player.GetComponent<attribute> ().SavePlayerAttribute ();
+			//player.GetComponent<attribute> ().SaveAttributeInFile ();
+			//Debug.Log ("Back Esc Menu");
 			if (EscMenu.active == true) {
                 Button_Backgame();
 				return;
@@ -26,10 +32,14 @@ public class Script_EscMenu : MonoBehaviour
             if (SettingMenu.active == true)
             {
                 Time.timeScale = 1;
+                mask.SetActive(false);
                 SettingMenu.SetActive(false);
-            }  else {
-				Time.timeScale = 0;          //暂停
-				EscMenu.SetActive(true);     //显示菜单
+            }  
+			else 
+			{
+				Time.timeScale = 0;
+                mask.SetActive(true);//暂停
+                EscMenu.SetActive(true);     //显示菜单
 			}
 
         }
@@ -37,7 +47,8 @@ public class Script_EscMenu : MonoBehaviour
     public void Button_Backgame()
     {
         EscMenu.SetActive(false);       //隐藏菜单
-        Time.timeScale = 1;             //继续游戏
+        Time.timeScale = 1;
+        mask.SetActive(false);//继续游戏
     }
     public void Button_Setting()
     {

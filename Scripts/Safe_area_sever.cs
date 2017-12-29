@@ -16,18 +16,25 @@ public class Safe_area_sever : MonoBehaviour
     public GameObject shop;
     public Text ui_text;
     public GameObject Boss_Slider;
+    public GameObject TimerUI;
+    public Sprite TimerUI_red;
+    public Sprite TimerUI_blue;
+    public GameObject AvatarIcon;
 
     public Avatar axe;
     public Avatar crystal;
     public GameObject attack_axe;
     public GameObject attack_crystal;
+    public GameObject GameLevelUI;
 
 	public GameObjectGenerate gameobject_generate;
 	public attribute player_attribute;
+    
 
     public float map_scale_x = 500;
     public float map_scale_z = 500;
-    public float wait_time = 5f;
+    public float Base_wait_time = 3f;
+    public float Additional_wait_time = 20f;
     public float Base_transfer_time = 10f;
     public float Additional_transfer_time = 50f;
     public float TotalRounds = 3;
@@ -49,6 +56,7 @@ public class Safe_area_sever : MonoBehaviour
 
 	private float boss_length = 2.2f;
 	private float boss_width = 2.2f;
+    private float Timer_max;
 
     // Use this for initialization
     void Start () 
@@ -118,26 +126,31 @@ public class Safe_area_sever : MonoBehaviour
 
 */
 		Debug.Log (player_attribute.level_num);
-
-		/*
+        GameLevelUI.transform.Find("Text").gameObject.GetComponent<Text>().text = player_attribute.level_num.ToString();
+        /*
 		Debug.Log (player_attribute.GetSaveTimeFromFile ());
 
 		Debug.Log (player_attribute.GetLevelOfGameFromFile ().ToString ());
 		Debug.Log (player_attribute.GetLevelOfPlayerFromFile ().ToString ());
 		Debug.Log (player_attribute.GetGoldOfPlayerFromFile ().ToString ());
 		*/
-		//Debug.Log(player_attribute.GetAttributeFromFile ("gold"));
-		//Debug.Log(player_attribute.GetAttributeFromFile ("Level",0));
-		//Debug.Log(player_attribute.GetAttributeFromFile ("level_num"));
+        //Debug.Log(player_attribute.GetAttributeFromFile ("gold"));
+        //Debug.Log(player_attribute.GetAttributeFromFile ("Level",0));
+        //Debug.Log(player_attribute.GetAttributeFromFile ("level_num"));
 
 
 
-		//player_attribute.DecryptDES (player_attribute.EncryptDES ("HP_max", player_attribute.Key), player_attribute.Key);
-		Boss.GetComponent<attribute>().Level = player_attribute.level_num;
+        //player_attribute.DecryptDES (player_attribute.EncryptDES ("HP_max", player_attribute.Key), player_attribute.Key);
+        Boss.GetComponent<attribute>().Level = player_attribute.level_num;
 		Boss.GetComponent<attribute> ().BossUpdate ();
         try
         {
             int _charac = PlayerPrefs.GetInt("Character");
+            Debug.Log(_charac.ToString() + " 11111 " + player_attribute.ZhiYe);
+            if (!(player_attribute.IsInit))
+                _charac = player_attribute.ZhiYe == "warrior" ? 0 : 1;
+            Debug.Log(_charac.ToString() + " 22222 " + player_attribute.ZhiYe);
+            player.GetComponent<attribute>().NiCheng = PlayerPrefs.GetString("player_name") == "" ? "FuHong" : PlayerPrefs.GetString("player_name");
             if (_charac == 1)
             {
                 player.transform.Find("axe_armor").gameObject.SetActive(false);
@@ -154,19 +167,22 @@ public class Safe_area_sever : MonoBehaviour
                 player.transform.Find("crystal_maiden_shoulder_bow").gameObject.SetActive(true);
                 player.transform.Find("Root_0").gameObject.SetActive(true);
 
+                AvatarIcon.transform.Find("Head").gameObject.SetActive(false);
+                AvatarIcon.transform.Find("Head2").gameObject.SetActive(true);
+
                 player.GetComponent<Animator>().avatar = crystal;
                 player.transform.Find("Attack_area").gameObject.SetActive(false);
                 player.GetComponent<ThirdPersonUserControl>().attack_object = attack_crystal;
-                player.GetComponent<attribute>().ZhiYe = "法师";
+                player.GetComponent<attribute>().ZhiYe = "wizard";
 				if(player_attribute.IsInit)
 				{
-                	player.GetComponent<attribute>().ATK = 50 * 5;
-                	player.GetComponent<attribute>().DEF = 5 * 5;
-                	player.GetComponent<attribute>().ATKGrowth = 3f * 5f;
-                	player.GetComponent<attribute>().DEFGrowth = 0.2f * 5f;
-                	player.GetComponent<attribute>().HPGrowth = 10f;
+                	player.GetComponent<attribute>().ATK = 70 ;
+                	player.GetComponent<attribute>().DEF = 10 ;
+                	player.GetComponent<attribute>().ATKGrowth = 6f ;
+                	player.GetComponent<attribute>().DEFGrowth = 2f ;
+                	player.GetComponent<attribute>().HPGrowth = 8f;
                 	player.GetComponent<attribute>().FireRate = 0.8f;
-                	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.2f;
+                	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.5f;
 					player_attribute.AttributeInit();
 					player_attribute.IsInit = false;
 				}
@@ -188,17 +204,20 @@ public class Safe_area_sever : MonoBehaviour
                 player.transform.Find("crystal_maiden_shoulder_bow").gameObject.SetActive(false);
                 player.transform.Find("Root_0").gameObject.SetActive(false);
 
+                AvatarIcon.transform.Find("Head").gameObject.SetActive(true);
+                AvatarIcon.transform.Find("Head2").gameObject.SetActive(false);
+
                 player.GetComponent<Animator>().avatar = axe;
                 player.transform.Find("Attack_area").gameObject.SetActive(true);
                 player.GetComponent<ThirdPersonUserControl>().attack_object = attack_axe;
-                player.GetComponent<attribute>().ZhiYe = "战士";
+                player.GetComponent<attribute>().ZhiYe = "warrior";
 				if(player_attribute.IsInit)
 				{
-					player.GetComponent<attribute>().ATK = 30 * 5;
-                	player.GetComponent<attribute>().DEF = 10 * 5;
-                	player.GetComponent<attribute>().ATKGrowth = 1.5f * 5f;
-                	player.GetComponent<attribute>().DEFGrowth = 1f * 5f;
-                	player.GetComponent<attribute>().HPGrowth = 20f;
+					player.GetComponent<attribute>().ATK = 45 ;
+                	player.GetComponent<attribute>().DEF = 35 ;
+                	player.GetComponent<attribute>().ATKGrowth = 5f ;
+                	player.GetComponent<attribute>().DEFGrowth = 3f ;
+                	player.GetComponent<attribute>().HPGrowth = 10f;
                 	player.GetComponent<attribute>().FireRate = 0.6f;
                 	player.GetComponent<ThirdPersonCharacter>().m_MoveSpeedMultiplier = 1.5f;
 					player_attribute.AttributeInit();
@@ -225,20 +244,31 @@ public class Safe_area_sever : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-        if (WinFlag)
-            return;
-        
-        if ((Boss.transform.position - player.transform.position).sqrMagnitude < 10000)
-            Boss_Slider.SetActive(true);
-        else
-            Boss_Slider.SetActive(false);
-        Boss.transform.Find("Boss Partical").Rotate(0,0, 20 * Time.fixedDeltaTime);
-       // Boss.transform.Find("Particle System").Rotate()
         if (player.transform.position.x < 2 * quad1.transform.position.x ||
                 player.transform.position.x > 2 * quad3.transform.position.x - map_scale_x ||
                 player.transform.position.z < 2 * quad2.transform.position.z ||
                 player.transform.position.z > 2 * quad4.transform.position.z - map_scale_z)
+        {
+            player.GetComponent<ThirdPersonUserControl>().StateIcon.transform.Find("Unsafe").gameObject.GetComponent<Image>().fillAmount = 1.0f;
             player.GetComponent<attribute>().update_HP(-DamagePerSecond * Time.deltaTime);
+        }
+        else
+        {
+            player.GetComponent<ThirdPersonUserControl>().StateIcon.transform.Find("Unsafe").gameObject.GetComponent<Image>().fillAmount = 0.0f;
+        }
+        if (WinFlag)
+            return;
+
+        if ((Boss.transform.position - player.transform.position).sqrMagnitude < 10000 && !WinFlag)
+            Boss_Slider.SetActive(true);
+        else
+            Boss_Slider.SetActive(false);
+        Boss.transform.Rotate(0, 0, 26 * Time.fixedDeltaTime);
+        //Boss.transform.Find("Boss Partical").Rotate(0,0, 20 * Time.fixedDeltaTime);
+        // Boss.transform.Find("Particle System").Rotate()
+
+
+
         if (timer > 0)
             timer -= Time.fixedDeltaTime;
         if (boss_transition_timer > 0)
@@ -258,7 +288,7 @@ public class Safe_area_sever : MonoBehaviour
 				Vector3 t = new Vector3(SafeCenter.x,3.9f,SafeCenter.z);
 				while (gameobject_generate.IsCoincide (new GameObjectGenerate.GameObjectNode (t.x, t.y, t.z, boss_length, boss_width, 0)))
 				{
-					t = t + new Vector3 (UnityEngine.Random.Range (-4f * boss_length, 4f * boss_length), 0, UnityEngine.Random.Range (-4f * boss_width, 4f * boss_width));
+					t = t + new Vector3 (UnityEngine.Random.Range (-12f * boss_length, 12f * boss_length), 0, UnityEngine.Random.Range (-12f * boss_width, 12f * boss_width));
 				}
 				Boss.transform.position = t;
 
@@ -280,23 +310,25 @@ public class Safe_area_sever : MonoBehaviour
             Boss_Slider.SetActive(false);
             //Boss.transform.Find("Boss Partical").gameObject.SetActive(false);
             //Boss.transform.Find("Died Partical").gameObject.SetActive(true);
-            quad1.transform.position = new Vector3(0f, 0.02f, map_scale_z / 2);
-            quad2.transform.position = new Vector3(map_scale_x / 2, 0.02f, 0f);
-            quad3.transform.position = new Vector3(map_scale_x - 0f, 0.02f, map_scale_z / 2);
-            quad4.transform.position = new Vector3(map_scale_x / 2, 0.02f, map_scale_z - 0f);
+            //quad1.transform.position = new Vector3(0f, 0.02f, map_scale_z / 2);
+            //quad2.transform.position = new Vector3(map_scale_x / 2, 0.02f, 0f);
+            //quad3.transform.position = new Vector3(map_scale_x - 0f, 0.02f, map_scale_z / 2);
+            //quad4.transform.position = new Vector3(map_scale_x / 2, 0.02f, map_scale_z - 0f);
 
-            quad1.transform.localScale = new Vector3(0f, map_scale_z, 1f);
-            quad2.transform.localScale = new Vector3(0f, map_scale_x, 1f);
-            quad3.transform.localScale = new Vector3(0f, map_scale_z, 1f);
-            quad4.transform.localScale = new Vector3(0f, map_scale_x, 1f);
+            //quad1.transform.localScale = new Vector3(0f, map_scale_z, 1f);
+            //quad2.transform.localScale = new Vector3(0f, map_scale_x, 1f);
+            //quad3.transform.localScale = new Vector3(0f, map_scale_z, 1f);
+            //quad4.transform.localScale = new Vector3(0f, map_scale_x, 1f);
 
             player.GetComponent<attribute>().update_HP(player.GetComponent<attribute>().HP_max);
+            //player_attribute.SavePlayerAttribute();
+            player_attribute.SaveAttributeInFile();
             shop.transform.position = Boss.transform.position;
             shop.SetActive(true);
-
+            GameLevelUI.transform.Find("Text").gameObject.GetComponent<Text>().text = (player_attribute.level_num+1).ToString();
             //event when success
 
-			//player_attribute.SavePlayerAttribute();
+            //player_attribute.SavePlayerAttribute();
 
             return;
         }
@@ -317,20 +349,28 @@ public class Safe_area_sever : MonoBehaviour
                     DeltaQuad2 = (SafeCenter.z - 2 * quad2.transform.position.z) / _totalframes / scale_factor;
                     DeltaQuad3 = (2 * quad3.transform.position.x - map_scale_x - SafeCenter.x) / _totalframes / scale_factor;
                     DeltaQuad4 = (2 * quad4.transform.position.z - map_scale_z - SafeCenter.z) / _totalframes / scale_factor;
-                    timer = wait_time;
+                    timer = Base_wait_time+ Additional_wait_time/rounds;
+                    Timer_max = Base_wait_time + Additional_wait_time / rounds;
                     IsWaiting = true;
-
+                    TimerUI.transform.Find("StateBackground").gameObject.GetComponent<Image>().sprite = TimerUI_blue;
+                    TimerUI.transform.Find("State").gameObject.GetComponent<Text>().text = "WAITING";
                     // Transition of Boss
                     boss_transition_timer = 6f;
                 }
                 else
                 {
                     timer = (Base_transfer_time + Additional_transfer_time / rounds);
+                    Timer_max = (Base_transfer_time + Additional_transfer_time / rounds);
                     IsWaiting = false;
+                    TimerUI.transform.Find("StateBackground").gameObject.GetComponent<Image>().sprite = TimerUI_red;
+                    TimerUI.transform.Find("State").gameObject.GetComponent<Text>().text = "REDUCING";
                 }
             }
             // TBD: else here?
-            ui_text.text = (IsWaiting ? "Safe Area Will Reduce in " : "Safe Area Reductin Ends in ") + ((int)timer + 1).ToString();
+            
+            TimerUI.GetComponent<Slider>().value = timer / Timer_max;
+            TimerUI.transform.Find("Fill Area").Find("Fill").gameObject.GetComponent<Image>().color = new Color(1 - timer / Timer_max, timer / Timer_max, 0);
+            TimerUI.transform.Find("Handle Slide Area").Find("Handle").Find("Time").gameObject.GetComponent<Text>().text = ((int)timer + 1).ToString();
             if (!IsWaiting)
             {
                 quad1.transform.position = quad1.transform.position + new Vector3(DeltaQuad1/2, 0f, 0f);

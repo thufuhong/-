@@ -6,6 +6,7 @@ public class OpenInfoMenu : MonoBehaviour
 {
 
    public GameObject Info;
+    public GameObject mask;
 
 	// Use this for initialization
 	void Start () {
@@ -20,10 +21,12 @@ public class OpenInfoMenu : MonoBehaviour
             {
                 Info.SetActive(false);
                 Time.timeScale = 1 ;
+                mask.SetActive(false);
             }
             else
             {
-                Time.timeScale = 0;          
+                Time.timeScale = 0;
+                mask.SetActive(true);
                 Info.SetActive(true);     
             }
 
@@ -32,6 +35,7 @@ public class OpenInfoMenu : MonoBehaviour
     public void ButtonHead ()
     {
         Time.timeScale = 0;
+        mask.SetActive(true);
         Info.SetActive(true); 
     }
 }

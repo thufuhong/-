@@ -11,6 +11,7 @@ public class GameObjectGenerate : MonoBehaviour
 	public GameObject enemy_attack_area;
 	public GameObject itemHP;
 	public GameObject itemCoin;
+    public GameObject Congratulation;
 
 	public GameObject RockHill_1;
 	public GameObject RockHill_2;
@@ -117,9 +118,12 @@ public class GameObjectGenerate : MonoBehaviour
 
 	// Use this for initialization
 	void Start () 
-	{		
-		//generate gameobject
-		for (int j = 0; j < 3; j++)
+	{
+        int game_level = player.GetComponent<attribute>().level_num;
+        if (game_level == 5)
+            Congratulation.SetActive(true);
+        //generate gameobject
+        for (int j = 0; j < 3; j++)
 		{
 			GenetateEnemy (60);
 			GenetateHP (10);
@@ -129,6 +133,7 @@ public class GameObjectGenerate : MonoBehaviour
 			GenerateRockHill (3);
 			GenerateMoutain (3);
 		}
+
 
 		/*
 		{
@@ -214,7 +219,8 @@ public class GameObjectGenerate : MonoBehaviour
 	//generate count HPs
 	void GenetateHP(int count)
 	{
-		Vector3 t;
+        int game_level = player.GetComponent<attribute>().level_num;
+        Vector3 t;
 		for (int i = 0; i < count; i++)
 		{
 			while (true)
@@ -228,12 +234,13 @@ public class GameObjectGenerate : MonoBehaviour
 				}
 			}
 			GameObject temp_HP = Instantiate (itemHP, t, Quaternion.Euler(-90, 0, 0));
-			temp_HP.GetComponent<pickGoods> ().value = (int)UnityEngine.Random.Range (10, 50);
+			temp_HP.GetComponent<pickGoods> ().value = (int)UnityEngine.Random.Range (-5+ game_level * 15, 25+ game_level * 25);
 		}
 	}
 
     void GenetateCoins(int count)
     {
+        int game_level = player.GetComponent<attribute>().level_num;
         Vector3 t;
         for (int i = 0; i < count; i++)
         {
@@ -248,7 +255,7 @@ public class GameObjectGenerate : MonoBehaviour
                 }
             }
             GameObject temp_HP = Instantiate(itemCoin, t, Quaternion.Euler(-90, 0, 0));
-            temp_HP.GetComponent<pickGoods>().value = (int)UnityEngine.Random.Range(10, 50);
+            temp_HP.GetComponent<pickGoods>().value = (int)UnityEngine.Random.Range(-10+ game_level * 20, 30 + game_level * 20);
         }
     }
 

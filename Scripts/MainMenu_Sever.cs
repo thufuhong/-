@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainMenu_Sever : MonoBehaviour {
     public Transform BackGroundTransform;
@@ -8,9 +9,17 @@ public class MainMenu_Sever : MonoBehaviour {
     public Vector3 DiffCenter = new Vector3(-2, 0, 0);
     public int counter = 0;
     public GameObject choosePlayer;
+    public GameObject loadgame;
+    public GameObject developer;
+    public GameObject input;
+
+	public GameObject loadSprite;
+    public Transform SpotLight;
 
     private Vector3 BackgtoundTarget;
     private Vector3 CameraTarget;
+    private int _x;
+    private bool isUIOpen = false;
     // Use this for initialization
     void Start () 
 	{
@@ -22,14 +31,23 @@ public class MainMenu_Sever : MonoBehaviour {
     {
         PlayerPrefs.SetInt("Character", x);
 		PlayerPrefs.SetInt ("level_num", 1);
-		GetComponent<attribute> ().IsInit = true;
+        PlayerPrefs.SetString("player_name", input.transform.Find("Text").gameObject.GetComponent<Text>().text);
+        GetComponent<attribute> ().IsInit = true;
 		GetComponent<attribute> ().SavePlayerAttribute ();
         BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
         CameraTarget = CameraTarget + DeltaCenter;
-        Invoke("LoadFirstScene", 2);
+        Invoke("LoadFirstScene", 1);
+    }
+    public void ButtonLoad(int x)
+    {
+        _x = x;
+        loadgame.SetActive(false);
+        BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
+        CameraTarget = CameraTarget + DeltaCenter;
+        Invoke("LoadArchive2", 1);
     }
 
-	/*
+    /*
 	interface for save and read archive:
 
 	void LoadFirstScene()
@@ -46,17 +64,37 @@ public class MainMenu_Sever : MonoBehaviour {
 
     void LoadFirstScene()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
+        // UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
+		StartCoroutine(loadScene("LevelFirst"));
     }
 
 	void LoadArchive(int num)
 	{
 		GetComponent<attribute> ().ReadAttributeFromFile (num);
 		GetComponent<attribute> ().SavePlayerAttribute ();
-		UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
+		// use AsyncOperation Loading
+		// UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
+		LoadFirstScene();
 	}
 
-	void SaveArchive(int num)
+	IEnumerator loadScene(string scene)
+	{
+		AsyncOperation async = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync (scene);
+		loadSprite.GetComponent<LoadRotate> ().async = async;
+		async.allowSceneActivation = false;
+		yield return async;
+	}
+
+    void LoadArchive2()
+    {
+        int num = _x;
+        // GetComponent<attribute>().ReadAttributeFromFile(num);
+        // GetComponent<attribute>().SavePlayerAttribute();
+        // UnityEngine.SceneManagement.SceneManager.LoadScene("LevelFirst");
+		LoadArchive(num);
+    }
+
+    void SaveArchive(int num)
 	{
 		GetComponent<attribute> ().ReadPlayerAttribute ();
 		GetComponent<attribute> ().SaveAttributeInFile (num);
@@ -77,6 +115,11 @@ public class MainMenu_Sever : MonoBehaviour {
 		return GetComponent<attribute> ().GetGoldOfPlayerFromFile (num);
 	}
 
+    string GetPlayerType(int num)
+    {
+        return GetComponent<attribute>().GetTypeOfPlayerFromFile(num);
+    }
+
 	string GetSaveTime(int num)
 	{
 		return GetComponent<attribute> ().GetSaveTimeFromFile (num);
@@ -84,6 +127,7 @@ public class MainMenu_Sever : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
+        SpotLight.localPosition = new Vector3(8.2f * Mathf.Cos(counter * 3 * Time.fixedDeltaTime), 4.17f, -8.32f);
         counter = counter + 1;
         //if (counter % 50 == 0)
             //Debug.Log("Sever Alive.");
@@ -100,10 +144,17 @@ public class MainMenu_Sever : MonoBehaviour {
         if (t.tag == "MainMenuButton")
         {
             // TODO: some feed back when mouse floating on button
+            Debug.Log(t.name);
             if (Input.GetButtonDown("Fire1"))
             {
+                
                 switch(t.name)
                 {
+                case "M1_DoublePlayer":
+                    {
+                        developer.SetActive(true);
+                        break;
+                    }
 				case "M1_Exit":
 					{    
 						Application.Quit ();
@@ -112,25 +163,112 @@ public class MainMenu_Sever : MonoBehaviour {
 				case "M2_NewGame":
                         
 					{
-						//BackgtoundTarget = BackgtoundTarget + DeltaCenter + DiffCenter;
-						//CameraTarget = CameraTarget + DeltaCenter;
-						//Invoke("LoadFirstScene", 2);
 						choosePlayer.SetActive (true);
 						break;
 					}
                         
 				case "M2_LoadGame":
 					{
+
 						//LoadArchive (3);
 
-						Debug.Log ("LoadGame");
-						SaveArchive (6);
-						Debug.Log(GetSaveTime (6));
-						Debug.Log(GetGameLevel (6));
-						Debug.Log(GetPlayerLevel (6));
-						Debug.Log(GetPlayerGold (6));
-						Debug.Log(GetSaveTime (6));
-						break;
+						//Debug.Log ("LoadGame");
+						//SaveArchive (6);
+						//Debug.Log(GetSaveTime (0));
+						//Debug.Log(GetGameLevel (0));
+						//Debug.Log(GetPlayerLevel (0));
+						//Debug.Log(GetPlayerGold (0));
+						//Debug.Log(GetSaveTime (0));
+      //                  Debug.Log(GetPlayerType(0));
+                            Transform _t;
+
+                            if(GetSaveTime(0)==" ")
+                            {
+                                loadgame.transform.Find("Save0").Find("Button0").gameObject.SetActive(false);
+                                loadgame.transform.Find("Save0").Find("Button1").gameObject.SetActive(false);
+                                loadgame.transform.Find("Save0").Find("Empty").gameObject.SetActive(true);
+                            }
+                            else
+                            {
+                                loadgame.transform.Find("Save0").Find("Empty").gameObject.SetActive(false);
+                                if (GetPlayerType(0) == "warrior")
+                                {
+                                    _t = loadgame.transform.Find("Save0").Find("Button0");
+                                    loadgame.transform.Find("Save0").Find("Button0").gameObject.SetActive(true);
+                                    loadgame.transform.Find("Save0").Find("Button1").gameObject.SetActive(false);
+                                }
+                                else
+                                {
+                                    _t = loadgame.transform.Find("Save0").Find("Button1");
+                                    loadgame.transform.Find("Save0").Find("Button0").gameObject.SetActive(false);
+                                    loadgame.transform.Find("Save0").Find("Button1").gameObject.SetActive(true);
+                                }
+
+                                _t.Find("Text").Find("GameLevel").gameObject.GetComponent<Text>().text = GetGameLevel(0).ToString();
+                                _t.Find("Text").Find("PlayerLevel").gameObject.GetComponent<Text>().text = GetPlayerLevel(0).ToString();
+                                _t.Find("Text").Find("gold").gameObject.GetComponent<Text>().text = GetPlayerGold(0).ToString();
+                                _t.Find("Text").Find("time").gameObject.GetComponent<Text>().text = GetSaveTime(0).ToString();
+                            }
+
+                            if (GetSaveTime(1) == " ")
+                            {
+                                loadgame.transform.Find("Save1").Find("Button0").gameObject.SetActive(false);
+                                loadgame.transform.Find("Save1").Find("Button1").gameObject.SetActive(false);
+                                loadgame.transform.Find("Save1").Find("Empty").gameObject.SetActive(true);
+                            }
+                            else
+                            {
+                                loadgame.transform.Find("Save1").Find("Empty").gameObject.SetActive(false);
+                                if (GetPlayerType(1) == "warrior")
+                                {
+                                    _t = loadgame.transform.Find("Save1").Find("Button0");
+                                    loadgame.transform.Find("Save1").Find("Button0").gameObject.SetActive(true);
+                                    loadgame.transform.Find("Save1").Find("Button1").gameObject.SetActive(false);
+                                }
+                                else
+                                {
+                                    _t = loadgame.transform.Find("Save1").Find("Button1");
+                                    loadgame.transform.Find("Save1").Find("Button0").gameObject.SetActive(false);
+                                    loadgame.transform.Find("Save1").Find("Button1").gameObject.SetActive(true);
+                                }
+
+                                _t.Find("Text").Find("GameLevel").gameObject.GetComponent<Text>().text = GetGameLevel(1).ToString();
+                                _t.Find("Text").Find("PlayerLevel").gameObject.GetComponent<Text>().text = GetPlayerLevel(1).ToString();
+                                _t.Find("Text").Find("gold").gameObject.GetComponent<Text>().text = GetPlayerGold(1).ToString();
+                                _t.Find("Text").Find("time").gameObject.GetComponent<Text>().text = GetSaveTime(1).ToString();
+                            }
+
+                            if (GetSaveTime(2) == " ")
+                            {
+                                loadgame.transform.Find("Save2").Find("Button0").gameObject.SetActive(false);
+                                loadgame.transform.Find("Save2").Find("Button1").gameObject.SetActive(false);
+                                loadgame.transform.Find("Save2").Find("Empty").gameObject.SetActive(true);
+                            }
+                            else
+                            {
+                                loadgame.transform.Find("Save2").Find("Empty").gameObject.SetActive(false);
+                                if (GetPlayerType(2) == "warrior")
+                                {
+                                    _t = loadgame.transform.Find("Save2").Find("Button0");
+                                    loadgame.transform.Find("Save2").Find("Button0").gameObject.SetActive(true);
+                                    loadgame.transform.Find("Save2").Find("Button1").gameObject.SetActive(false);
+                                }
+                                else
+                                {
+                                    _t = loadgame.transform.Find("Save2").Find("Button1");
+                                    loadgame.transform.Find("Save2").Find("Button0").gameObject.SetActive(false);
+                                    loadgame.transform.Find("Save2").Find("Button1").gameObject.SetActive(true);
+                                }
+
+                                _t.Find("Text").Find("GameLevel").gameObject.GetComponent<Text>().text = GetGameLevel(2).ToString();
+                                _t.Find("Text").Find("PlayerLevel").gameObject.GetComponent<Text>().text = GetPlayerLevel(2).ToString();
+                                _t.Find("Text").Find("gold").gameObject.GetComponent<Text>().text = GetPlayerGold(2).ToString();
+                                _t.Find("Text").Find("time").gameObject.GetComponent<Text>().text = GetSaveTime(2).ToString();
+                            }
+
+
+                            loadgame.SetActive(true);
+                        break;
 					}
 					
                     default:
