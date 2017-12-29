@@ -5,6 +5,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 {
     [RequireComponent(typeof (UnityEngine.AI.NavMeshAgent))]
     [RequireComponent(typeof (ThirdPersonCharacter))]
+	[RequireComponent(typeof (UnityEngine.AI.NavMeshAgent))]
     public class AICharacterControl : MonoBehaviour
     {
         public UnityEngine.AI.NavMeshAgent agent { get; private set; }             // the navmesh agent required for the path finding
@@ -16,12 +17,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         private Animator m_Animator;
         private attribute _attri;
-        private float CoolDownTime = -1f;
+		public float CoolDownTime = -1f;
         private Vector3 original_position;
         private float stopping_distance;
 
-        private void Start()
+        void Start()
         {
+			// Debug.Log ("AIStart");
             agent = GetComponentInChildren<UnityEngine.AI.NavMeshAgent>();
             character = GetComponent<ThirdPersonCharacter>();
             m_Animator = GetComponent<Animator>();
@@ -32,6 +34,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             original_position = transform.position;
             stopping_distance = agent.stoppingDistance;
         }
+
 
         void OnParticleCollision(GameObject colli)
         {
@@ -53,15 +56,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 }
             }
         }
-
+		/*
         private void Update()
         {
 
         }
-
+        */
 
         private void FixedUpdate()
         {
+			// Debug.Log ("FixUpdate");
             //this.gameObject.transform.position = new Vector3(this.gameObject.transform.position.x, 0f, this.gameObject.transform.position.z);
             if (CoolDownTime > 0)
                 CoolDownTime -= Time.fixedDeltaTime;
@@ -74,8 +78,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 if (agent.remainingDistance > agent.stoppingDistance)
                 {
                     // chase the player
-                    
-                    
                     character.Move(agent.desiredVelocity, false, false);
                 }
                 else
