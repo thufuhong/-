@@ -20,11 +20,16 @@ public class OpenInfoMenu : MonoBehaviour
             if (Info.active == true)
             {
                 Info.SetActive(false);
-                Time.timeScale = 1 ;
-                mask.SetActive(false);
+                mask.GetComponent<MaskCount>().count--;
+                if (mask.GetComponent<MaskCount>().count == 0)
+                {
+                    Time.timeScale = 1;
+                    mask.SetActive(false);
+                }
             }
             else
             {
+                mask.GetComponent<MaskCount>().count++;
                 Time.timeScale = 0;
                 mask.SetActive(true);
                 Info.SetActive(true);     
@@ -34,6 +39,7 @@ public class OpenInfoMenu : MonoBehaviour
 	}
     public void ButtonHead ()
     {
+        mask.GetComponent<MaskCount>().count++;
         Time.timeScale = 0;
         mask.SetActive(true);
         Info.SetActive(true); 

@@ -31,13 +31,18 @@ public class Script_EscMenu : MonoBehaviour
             }
             if (SettingMenu.active == true)
             {
-                Time.timeScale = 1;
-                mask.SetActive(false);
+                mask.GetComponent<MaskCount>().count--;
+                if (mask.GetComponent<MaskCount>().count == 0)
+                {
+                    Time.timeScale = 1;
+                    mask.SetActive(false);
+                }
                 SettingMenu.SetActive(false);
             }  
 			else 
 			{
-				Time.timeScale = 0;
+                mask.GetComponent<MaskCount>().count++;
+                Time.timeScale = 0;
                 mask.SetActive(true);//暂停
                 EscMenu.SetActive(true);     //显示菜单
 			}
@@ -46,9 +51,13 @@ public class Script_EscMenu : MonoBehaviour
     }
     public void Button_Backgame()
     {
+        mask.GetComponent<MaskCount>().count--;
         EscMenu.SetActive(false);       //隐藏菜单
-        Time.timeScale = 1;
-        mask.SetActive(false);//继续游戏
+        if (mask.GetComponent<MaskCount>().count == 0)
+        {
+            Time.timeScale = 1;
+            mask.SetActive(false);//继续游戏
+        }
     }
     public void Button_Setting()
     {
