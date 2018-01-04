@@ -57,6 +57,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private float DEFTime = -1f;
         private float DEF_multiplier;
         private float item_cooldown = -1.0f; //内置按键冷却时间0.5s，防止重复判定
+        private float skill1_bonus;
+        private float skill3_bonus;
 
 
         private void Start()
@@ -102,7 +104,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     {
                         list[i].materials[0].color = Color.white;
                     }
-                    _attr.ATK_bouns -= _attr.ATK * (Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0] - 1);
+                    _attr.ATK_bouns -= skill1_bonus;//_attr.ATK * (Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0] - 1);
                     //_attr.DEF_bouns -= _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0] - 1);
                     //_attr.ATK /= Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0];
                     //_attr.DEF /= Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0];
@@ -132,7 +134,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     Skill_3_active = false;
                     this.gameObject.transform.Find("Skill_3_shelter").gameObject.SetActive(false);
                     Sa.DamagePerSecond = Safe_area_damage_persecond_record;
-                    _attr.DEF_bouns -= _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[2] - 1);
+                    _attr.DEF_bouns -= skill3_bonus;//_attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[2] - 1);
                 }
             }
             if (Skill_4_CoolDownTime > 0)
@@ -159,7 +161,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 item_cooldown -= Time.fixedDeltaTime;
 
             if (!(this.gameObject.GetComponent<attribute>().ifAlive))
+            {
+                m_Move = new Vector3(0, 0, 0);
+                m_Character.Move(m_Move, false, m_Jump);
                 return;
+            }
+                
             
             // read inputs
             float h = Input.GetAxis("Horizontal");
@@ -196,8 +203,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 {
                     list[i].materials[0].color = Color.red;
                 }
-
-                _attr.ATK_bouns += _attr.ATK * (Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0] - 1);
+                skill1_bonus = _attr.ATK * (Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0] - 1);
+                _attr.ATK_bouns += skill1_bonus;
                 //_attr.DEF_bouns += _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0] - 1);
                 //_attr.ATK *= Skill_1_Value[0] + Skill_1_Value[3] * _attr.Skill_Level[0];
                 //_attr.DEF *= Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[0]; 
@@ -217,14 +224,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     Skill_3_active = false;
                     this.gameObject.transform.Find("Skill_3_shelter").gameObject.SetActive(false);
                     Sa.DamagePerSecond = Safe_area_damage_persecond_record;
-                    _attr.DEF_bouns -= _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[2] - 1);
+                    _attr.DEF_bouns -= skill3_bonus;
                 }
                 Skill_3_active = true;
                 Skill_3_CoolDownTime = Skill_3_CoolDownTime_Max;
                 this.gameObject.transform.Find("Skill_3_shelter").gameObject.SetActive(true);
                 Safe_area_damage_persecond_record = Sa.DamagePerSecond;
                 Sa.DamagePerSecond = 0;
-                _attr.DEF_bouns += _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[2] - 1);
+                skill3_bonus = _attr.DEF * (Skill_1_Value[1] + Skill_1_Value[4] * _attr.Skill_Level[2] - 1);
+                _attr.DEF_bouns += skill3_bonus;
             }
             if (state_now == Animator.StringToHash("Grounded") && Input.GetKeyDown(KeyCode.P) && Skill_4_CoolDownTime <= 0 && _attr.Skill_Level[3] > 0)
             {

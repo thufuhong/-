@@ -69,7 +69,21 @@ public class attribute : MonoBehaviour
 			if (HP <= 0)
 			{
 				ifAlive = false;
-				return HP;
+                try
+                {
+                    Animator anim = GetComponent<Animator>();
+                    anim.SetTrigger("death");
+                    anim.ResetTrigger("stun");
+                }
+                catch { }
+                if (this.gameObject.tag == "Team0")
+                {
+                    DieWindow.SetActive(true);
+                    DieWindow.gameObject.transform.Find("goldowned").gameObject.GetComponent<Text>().text = gold.ToString();
+                    DieWindow.gameObject.transform.Find("goldowned").gameObject.GetComponent<Text>().color = gold >= 1000 ? Color.black : Color.red;
+                }
+                    
+                return HP;
 			}
             HP += value;
             if(if_Player)
@@ -94,7 +108,11 @@ public class attribute : MonoBehaviour
                 if(this.gameObject.tag == "Team1")
                     Destroy(this.gameObject, 1.5f);
                 if (this.gameObject.tag == "Team0")
+                {
                     DieWindow.SetActive(true);
+                    DieWindow.gameObject.transform.Find("goldowned").gameObject.GetComponent<Text>().text = gold.ToString();
+                    DieWindow.gameObject.transform.Find("goldowned").gameObject.GetComponent<Text>().color = gold >= 1000 ? Color.black : Color.red;
+                }
                 // other event when death....
             }
             //Debug.Log(this.name + "recieve" + value.ToString() + ", remain" + HP.ToString());
@@ -323,9 +341,9 @@ public class attribute : MonoBehaviour
     // 玩家每回合大致获得80点总属性，怪物每回合获得90点属性
 	public void EnemyUpdate()
 	{
-		HP = HP_max = 60f * Level + 50f;
-		ATK = 55f * Level - 10f;
-		DEF = 35f * Level - 10f;
+		HP = HP_max = (60f * Level + 50f)*Mathf.Pow(1.1f,Mathf.Max(0, Level-4));
+		ATK = (55f * Level - 10f) * Mathf.Pow(1.1f, Mathf.Max(0, Level - 4));
+		DEF = (35f * Level - 10f) * Mathf.Pow(1.1f, Mathf.Max(0, Level - 4));
 		DropGold = 30f * Level + 10f;
         //DropEXP = 200f * Level + 200f;
         DropEXP = 300f;
@@ -334,14 +352,14 @@ public class attribute : MonoBehaviour
 
 	public void BossUpdate()
 	{
-		HP = HP_max = 1000f * Level + 200f;
-		ATK = 55f * Level + 5f;
-		DEF = 35f * Level - 5f;
+		HP = HP_max = (1000f * Level + 200f) * Mathf.Pow(1.1f, Mathf.Max(0, Level - 4));
+		ATK = (55f * Level + 5f) * Mathf.Pow(1.1f, Mathf.Max(0, Level - 4));
+		DEF = (35f * Level - 5f) * Mathf.Pow(1.1f, Mathf.Max(0, Level - 4));
 		DropGold = 300f * Level + 10f;
         //DropEXP = 600f * Level + 100f;
         DropEXP = 1000f;
 
-        safe_area_sever.GetComponent<Safe_area_sever>().DamagePerSecond = 4f*Level - 2f;
+        safe_area_sever.GetComponent<Safe_area_sever>().DamagePerSecond = (4f*Level - 2f)* Mathf.Pow(1.05f, Mathf.Max(0, Level - 4));
 	}
 
 	private void PrintAttribute()
@@ -393,59 +411,63 @@ public class attribute : MonoBehaviour
 
 	public void SaveAttributeInFile(int num_save = 0)
 	{
-		string path = Application.dataPath;
-		string dir = "/save/";
-		string name = "GameSave";
-		string format = ".mygame";
-		if (!Directory.Exists (path + dir))
-			Directory.CreateDirectory (path + dir);
-		string num_str = num_save.ToString ();
-		if(num_save > 0)
-			name = name + num_str;
-		FileStream fs = new FileStream(path + dir + name + format,FileMode.OpenOrCreate);
-		string tempString = "";
-		using (StreamWriter sw = new StreamWriter (fs))
-		{
-			tempString += ("HP_max " + HP_max.ToString () + "\n");
-			tempString += ("BallisticSpeed " + BallisticSpeed.ToString () + "\n");
-			tempString += ("BallisticDamage " + BallisticDamage.ToString () + "\n");
-			tempString += ("FireRate " + FireRate.ToString () + "\n");
-			tempString += ("MP_max " + MP_max.ToString () + "\n");
-			tempString += ("EXPmax " + EXP.ToString () + "\n");
-			tempString += ("Level " + Level.ToString () + "\n");
-			tempString += ("ATKGrowth " + ATKGrowth.ToString () + "\n");
-			tempString += ("DEFGrowth " + DEFGrowth.ToString () + "\n");
-			tempString += ("HPGrowth " + HPGrowth.ToString () + "\n");
-			tempString += ("MPGrowth " + MPGrowth.ToString () + "\n");
-			tempString += ("EXPForLevelUp " + EXPForLevelUp.ToString () + "\n");
-			tempString += ("gold " + gold.ToString () + "\n");
-			tempString += ("DropGold " + DropGold.ToString () + "\n");
-			tempString += ("team " + team.ToString () + "\n");
-			tempString += ("HP " + HP.ToString () + "\n");
-			tempString += ("MP " + MP.ToString () + "\n");
-			tempString += ("ATK " + ATK.ToString () + "\n");
-			tempString += ("DEF " + DEF.ToString () + "\n");
-			tempString += ("ForceBackPower " + ForceBackPower.ToString () + "\n");
-			tempString += ("ForceBackCounterMax " + ForceBackCounterMax.ToString () + "\n");
-			tempString += ("ForceBackCounter " + ForceBackCounter.ToString () + "\n");
-			tempString += ("skillUp_Num " + skillUp_Num.ToString () + "\n");
-			tempString += ("Skill_Level0 " + Skill_Level [0].ToString () + "\n");
-			tempString += ("Skill_Level1 " + Skill_Level [1].ToString () + "\n");
-			tempString += ("Skill_Level2 " + Skill_Level [2].ToString () + "\n");
-			tempString += ("Skill_Level3 " + Skill_Level [3].ToString () + "\n");
-			tempString += ("level_num " + (level_num+1).ToString () + "\n");
-            for (int _i = 0; _i < 12; _i++)
+        if (ifAlive)
+        {
+            string path = Application.dataPath;
+            string dir = "/save/";
+            string name = "GameSave";
+            string format = ".mygame";
+            if (!Directory.Exists(path + dir))
+                Directory.CreateDirectory(path + dir);
+            string num_str = num_save.ToString();
+            if (num_save > 0)
+                name = name + num_str;
+            FileStream fs = new FileStream(path + dir + name + format, FileMode.OpenOrCreate);
+            string tempString = "";
+            using (StreamWriter sw = new StreamWriter(fs))
             {
-                tempString += ("Item_num" + _i.ToString() + " " + bag.GetComponent<bagManager>().ItemOwned[_i].ToString() + "\n");
+                tempString += ("HP_max " + HP_max.ToString() + "\n");
+                tempString += ("BallisticSpeed " + BallisticSpeed.ToString() + "\n");
+                tempString += ("BallisticDamage " + BallisticDamage.ToString() + "\n");
+                tempString += ("FireRate " + FireRate.ToString() + "\n");
+                tempString += ("MP_max " + MP_max.ToString() + "\n");
+                tempString += ("EXPmax " + EXP.ToString() + "\n");
+                tempString += ("Level " + Level.ToString() + "\n");
+                tempString += ("ATKGrowth " + ATKGrowth.ToString() + "\n");
+                tempString += ("DEFGrowth " + DEFGrowth.ToString() + "\n");
+                tempString += ("HPGrowth " + HPGrowth.ToString() + "\n");
+                tempString += ("MPGrowth " + MPGrowth.ToString() + "\n");
+                tempString += ("EXPForLevelUp " + EXPForLevelUp.ToString() + "\n");
+                tempString += ("gold " + gold.ToString() + "\n");
+                tempString += ("DropGold " + DropGold.ToString() + "\n");
+                tempString += ("team " + team.ToString() + "\n");
+                tempString += ("HP " + HP.ToString() + "\n");
+                tempString += ("MP " + MP.ToString() + "\n");
+                tempString += ("ATK " + ATK.ToString() + "\n");
+                tempString += ("DEF " + DEF.ToString() + "\n");
+                tempString += ("ForceBackPower " + ForceBackPower.ToString() + "\n");
+                tempString += ("ForceBackCounterMax " + ForceBackCounterMax.ToString() + "\n");
+                tempString += ("ForceBackCounter " + ForceBackCounter.ToString() + "\n");
+                tempString += ("skillUp_Num " + skillUp_Num.ToString() + "\n");
+                tempString += ("Skill_Level0 " + Skill_Level[0].ToString() + "\n");
+                tempString += ("Skill_Level1 " + Skill_Level[1].ToString() + "\n");
+                tempString += ("Skill_Level2 " + Skill_Level[2].ToString() + "\n");
+                tempString += ("Skill_Level3 " + Skill_Level[3].ToString() + "\n");
+                tempString += ("level_num " + (level_num + 1).ToString() + "\n");
+                for (int _i = 0; _i < 12; _i++)
+                {
+                    tempString += ("Item_num" + _i.ToString() + " " + bag.GetComponent<bagManager>().ItemOwned[_i].ToString() + "\n");
+                }
+                tempString += ("ZhiYe " + ZhiYe + "\n");
+                tempString += ("NiCheng " + NiCheng + "\n");
+                save_time = System.DateTime.Now.ToString();
+                tempString += ("save_time " + save_time);
+                
+                string encryptString = Encrypt(tempString);
+                sw.Write(encryptString);
             }
-            tempString += ("ZhiYe " + ZhiYe +"\n");
-            save_time = System.DateTime.Now.ToString ();
-			tempString += ("save_time " + save_time);
-
-			string encryptString = Encrypt (tempString);
-			sw.Write (encryptString);
-		}
-		fs.Close ();
+            fs.Close();
+        }
 	}
 
 	public void ReadAttributeFromFile(int num_save = 0)
@@ -568,11 +590,16 @@ public class attribute : MonoBehaviour
             strArray = allArray[index++].Split(' ');
             ZhiYe = strArray[1];
 
+            strArray = allArray[index++].Split(' ');
+            Debug.Log(strArray);
+            NiCheng = strArray[1];
+
             strArray = allArray [index++].Split (' ');
 			save_time = strArray [1] + " " + strArray [2] + " " + strArray [3];
 
 
-			ifAlive = true;
+
+            ifAlive = true;
 			if_Player = true;
 			ForceBackDerection = new Vector3 (0, 0, 0);
 		}

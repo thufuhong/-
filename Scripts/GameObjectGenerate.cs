@@ -95,7 +95,7 @@ public class GameObjectGenerate : MonoBehaviour
 		while (current != null)
 		{
 			if (Mathf.Abs (current.Value.x - temp.x) < (current.Value.length + temp.length) / 2
-			   && Mathf.Abs (current.Value.z - temp.z) < (current.Value.length + temp.length) / 2)
+			   && Mathf.Abs (current.Value.z - temp.z) < (current.Value.width + temp.width) / 2)
 				return true;
 			current = current.Next;
 		}
@@ -285,7 +285,9 @@ public class GameObjectGenerate : MonoBehaviour
 					}
 				}
 				temp_tree [i] = Instantiate (tree [i], t, new Quaternion ());
-			}
+                temp_tree[i].tag = "Terrain";
+
+            }
 		}
 
 		//generate trees together 
@@ -312,7 +314,8 @@ public class GameObjectGenerate : MonoBehaviour
 					}
 				}
 				temp_tree [i] = Instantiate (tree [i], t, new Quaternion ());
-			}
+                temp_tree[i].tag = "Terrain";
+            }
 		}
 	}
 
@@ -342,7 +345,8 @@ public class GameObjectGenerate : MonoBehaviour
 					}
 				}
 				temp_rock [i] = Instantiate (rock [i], t, new Quaternion ());
-			}
+                temp_rock[i].tag = "Terrain";
+            }
 			while (true)
 			{
 				t = new Vector3 (UnityEngine.Random.Range (edge_width + map_x * rock_area_fraction_low, map_x * rock_area_fraction_high - edge_width), 
@@ -353,7 +357,8 @@ public class GameObjectGenerate : MonoBehaviour
 					break;
 				}
 				temp_rock [2] = Instantiate (rock [2], t, new Quaternion ());
-			}
+                temp_rock[2].tag = "Terrain";
+            }
 			for (int i = 3; i < 5; i++)
 			{
 				while (true)
@@ -367,7 +372,8 @@ public class GameObjectGenerate : MonoBehaviour
 					}
 				}
 				temp_rock [i] = Instantiate (rock [i], t, new Quaternion ());
-			}
+                temp_rock[i].tag = "Terrain";
+            }
 		}
 	}
 
@@ -397,7 +403,8 @@ public class GameObjectGenerate : MonoBehaviour
 					}
 				}
 				temp_moutain [i] = Instantiate (moutain [i], t, new Quaternion ());
-			}
+                temp_moutain[i].tag = "Terrain";
+            }
 		}
 	}
 }

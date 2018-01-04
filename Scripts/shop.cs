@@ -152,7 +152,7 @@ public class shop : MonoBehaviour {
                 SaveOpened = true;
             }
 
-            if (Input.GetKeyDown (KeyCode.N) && !next_level)
+            if (Input.GetKeyDown (KeyCode.N) && !next_level && player.GetComponent<attribute>().ifAlive)
 			{
 				//next level
 				next_level = true;

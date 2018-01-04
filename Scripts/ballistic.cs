@@ -27,6 +27,10 @@ public class ballistic : MonoBehaviour {
         else
             enemytag = "Team0";
         GameObject t = colli.gameObject;
+        if (t.tag == "Terrain")
+        {
+            Destroy(this.gameObject);
+        }
         if (t.tag == enemytag)
         {
             if (t.GetComponent<attribute>().ifAlive == false)

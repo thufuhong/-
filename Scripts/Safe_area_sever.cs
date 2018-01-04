@@ -53,10 +53,12 @@ public class Safe_area_sever : MonoBehaviour
     private float DeltaQuad4;
     private float boss_transition_timer = -1.0f;
     private bool WinFlag = false;
+    private bool exciting = false;
 
 	private float boss_length = 2.2f;
 	private float boss_width = 2.2f;
     private float Timer_max;
+    private bool while_is_busy = false;
 
     // Use this for initialization
     void Start () 
@@ -150,7 +152,8 @@ public class Safe_area_sever : MonoBehaviour
             if (!(player_attribute.IsInit))
                 _charac = player_attribute.ZhiYe == "warrior" ? 0 : 1;
             Debug.Log(_charac.ToString() + " 22222 " + player_attribute.ZhiYe);
-            player.GetComponent<attribute>().NiCheng = PlayerPrefs.GetString("player_name") == "" ? "FuHong" : PlayerPrefs.GetString("player_name");
+            player.GetComponent<attribute>().NiCheng = PlayerPrefs.GetString("player_name") == "" ? "FuWang" : PlayerPrefs.GetString("player_name");
+            
             if (_charac == 1)
             {
                 player.transform.Find("axe_armor").gameObject.SetActive(false);
@@ -225,6 +228,13 @@ public class Safe_area_sever : MonoBehaviour
 				}
 
             }
+            if (PlayerPrefs.GetString("player_name") == "exciting")
+                exciting = true;
+            if (player_attribute.level_num ==1&& (PlayerPrefs.GetString("player_name") == "fuhong" || PlayerPrefs.GetString("player_name") == "yehao" || PlayerPrefs.GetString("player_name") == "hongjie" || PlayerPrefs.GetString("player_name") == "zhiyuan" || PlayerPrefs.GetString("player_name") == "sicheng"))
+            {
+                player.GetComponent<attribute>().update_EXP(60 * player.GetComponent<attribute>().EXPForLevelUp);
+                player.GetComponent<attribute>().update_gold(99999f);
+            }
         }
         catch { }
 
@@ -256,6 +266,15 @@ public class Safe_area_sever : MonoBehaviour
         {
             player.GetComponent<ThirdPersonUserControl>().StateIcon.transform.Find("Unsafe").gameObject.GetComponent<Image>().fillAmount = 0.0f;
         }
+        if(exciting && player.GetComponent<attribute>().ifAlive)
+        {
+            player.GetComponent<ThirdPersonUserControl>().StateIcon.transform.Find("exciting").gameObject.GetComponent<Image>().fillAmount = 1.0f;
+            player.GetComponent<attribute>().update_HP(1f * Time.deltaTime);
+        }
+        else
+        {
+            player.GetComponent<ThirdPersonUserControl>().StateIcon.transform.Find("exciting").gameObject.GetComponent<Image>().fillAmount = 0.0f;
+        }
         if (WinFlag)
             return;
 
@@ -284,13 +303,17 @@ public class Safe_area_sever : MonoBehaviour
             if ( boss_transition_timer <3)
             {
                 //Boss.transform.position = SafeCenter + new Vector3(0f, 3.9f, 0f);
-
-				Vector3 t = new Vector3(SafeCenter.x,3.9f,SafeCenter.z);
-				while (gameobject_generate.IsCoincide (new GameObjectGenerate.GameObjectNode (t.x, t.y, t.z, boss_length, boss_width, 0)))
-				{
-					t = t + new Vector3 (UnityEngine.Random.Range (-12f * boss_length, 12f * boss_length), 0, UnityEngine.Random.Range (-12f * boss_width, 12f * boss_width));
-				}
-				Boss.transform.position = t;
+                if (!while_is_busy)
+                {
+                    while_is_busy = true;
+                    Vector3 t = new Vector3(SafeCenter.x, 3.9f, SafeCenter.z);
+                    while (gameobject_generate.IsCoincide(new GameObjectGenerate.GameObjectNode(t.x, t.y, t.z, boss_length, boss_width, 0)))
+                    {
+                        t = t + new Vector3(UnityEngine.Random.Range(-12f * boss_length, 12f * boss_length), 0, UnityEngine.Random.Range(-12f * boss_width, 12f * boss_width));
+                    }
+                    Boss.transform.position = t;
+                    
+                }
 
 
 
@@ -299,6 +322,7 @@ public class Safe_area_sever : MonoBehaviour
             }
             if (boss_transition_timer < 0)
             {
+                while_is_busy = false;
                 Boss.transform.Find("Boss Partical").gameObject.SetActive(true);
                 Boss.GetComponent<Collider>().enabled = true;
             }
