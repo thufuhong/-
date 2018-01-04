@@ -221,7 +221,8 @@ public class attribute : MonoBehaviour
                 Skill_4_Icon.GetComponent<Image>().fillAmount = 1;
         }
         catch { }
-
+        if (if_Player)
+            ui_HP.value = Mathf.Max(HP, 0) / HP_max;
         if (ForceBackCounter>=0)
         {
             this.gameObject.transform.position = this.gameObject.transform.position +
